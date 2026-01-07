@@ -28,7 +28,7 @@
 ### Stack Tecnológico:
 - **Frontend:** Streamlit
 - **Cerebro:** Gemini 2.0 Flash (google-genai SDK v1.56.0)
-- **Voz:** Edge TTS (Gratis, es-MX-DaliaNeural por defecto)
+- **Voz:** Edge TTS Hardened (Gratis, Anti-403, es-MX-DaliaNeural)
 - **Visual:** Together AI Flux-Schnell (1024x1792, 9:16)
 - **Video:** MoviePy 1.0.3 (NUNCA actualizar a 2.x)
 
@@ -41,7 +41,7 @@
 ```
 agents/
 ├── scriptwriter.py        (Gemini - Ads Expansive)
-├── audio_generator.py     (Edge TTS - Voz Gratis)
+├── audio_generator.py     (Edge TTS Hardened - Reintentos)
 ├── visual_generator.py    (Flux - Industrial Realism)
 └── video_editor.py        (MoviePy - Ensamblaje)
 
@@ -156,7 +156,7 @@ Y estaré listo para ayudarte con contexto completo de:
 **Fix:** Verifica API keys en `secrets.toml`
 
 ### Error común: Edge TTS 403 / Handshake
-**Fix:** Bloqueo temporal de IP. Reintentar o cambiar red.
+**Fix:** Sistema de reintentos automáticos ya implementado (Hardened).
 
 ### Error común: MoviePy timing
 **Fix:** Clamp: `min(end, audio.duration - 0.1)`
@@ -175,7 +175,7 @@ Y estaré listo para ayudarte con contexto completo de:
 ## ✅ ESTADO ACTUAL:
 
 - ✅ Gemini 2.0 Flash migrado y funcionando
-- ✅ Edge TTS configurado (Audio TTS Gratis)
+- ✅ Edge TTS Hardened configurado (Audio TTS Gratis + Anti-403)
 - ✅ Together AI Flux configurado (imágenes industriales)
 - ✅ App con 4 fases implementadas
 - ✅ **Fase 4 (Ensamblaje) COMPLETA:**
