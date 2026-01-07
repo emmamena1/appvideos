@@ -47,10 +47,10 @@ class AudioGeneratorAgent:
             os.makedirs(output_dir, exist_ok=True)
             output_path = os.path.join(output_dir, filename)
             
-            # Cache check (>0 bytes)
-            if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-                print(f"[CACHE] Audio encontrado: {output_path}")
-                return output_path
+            # Cache deshabilitado - Siempre genera audios frescos
+            # if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+            #     print(f"[CACHE] Audio encontrado: {output_path}")
+            #     return output_path
 
             print(f"[*] Generando audio: {text[:30]}...")
             
