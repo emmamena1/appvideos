@@ -1,0 +1,24 @@
+
+--- Testing REST: Control (English) (model=aura-asteria-en) ---
+[OK] SUCCESS: model=aura-asteria-en
+   Saved to rest_model_aura-asteria-en.wav
+
+--- Testing REST: Standard Spanish (model=aura-luna-es) ---
+[FAIL] FAIL: 400
+   Body: {"err_code":"Bad Request","err_msg":"No such model/version combination found.","request_id":"fc817fa3-450c-4ff4-bfb9-5578953bd70c"}
+
+--- Testing REST: Colombian Spanish (model=aura-celeste-es) ---
+[FAIL] FAIL: 400
+   Body: {"err_code":"Bad Request","err_msg":"No such model/version combination found.","request_id":"cb261ca8-f119-4655-bc88-ebb09bc0f67f"}
+
+--- Testing REST: Aura-2 Auto (model=aura-2) ---
+[FAIL] FAIL: 400
+   Body: {"err_code":"INVALID_QUERY_PARAMETER","err_msg":"Invalid 'model' value of 'aura-2'.","request_id":"d0e048f2-723c-4ba4-9bc1-a22d8c5649ad"}
+
+--- Testing REST: Aura-2 Carina (model=aura-2&voice=carina) ---
+[FAIL] FAIL: 400
+   Body: {"err_code":"INVALID_QUERY_PARAMETER","err_msg":"Invalid 'model' value of 'aura-2'.","request_id":"14a1ba76-ca7b-4523-a689-682f1fc36e19"}
+
+--- Testing REST: Aura-2 Lang ES (model=aura-2&language=es) ---
+[FAIL] FAIL: 400
+   Body: {"err_code":"INVALID_QUERY_PARAMETER","err_msg":"Invalid 'model' value of 'aura-2'.","request_id":"833cdf1b-bb2e-46b6-b5ed-7458e5f060bd"}

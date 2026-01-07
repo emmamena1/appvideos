@@ -48,17 +48,24 @@ class AudioGeneratorAgent:
                 return output_path
 
             # 2. Configuración para Deepgram SDK v5.x
-            # Usar opciones directamente en el método generate()
+            # Método: speak.v1.audio.generate()
             
-            # 3. Llamada a la API (Sintaxis correcta para SDK v5.x)
-            # Método: speak.v1.audio.generate() retorna un generator de bytes
-            response = self.client.speak.v1.audio.generate(
-                text=text,
-                model="aura-luna-es"  # Voz femenina latina natural
-            )
+            # Intentar generar en español, fallback a inglés si falla el modelo
+            target_model = "aura-celeste-es"
+            try:
+                response = self.client.speak.v1.audio.generate(
+                    text=text,
+                    model=target_model
+                )
+            except Exception as e_es:
+                st.warning(f"⚠️ Voz español '{target_model}' falló: {e_es}. Usando fallback (inglés).")
+                target_model = "aura-asteria-en"
+                response = self.client.speak.v1.audio.generate(
+                    text=text,
+                    model=target_model
+                )
             
             # 4. Guardar el audio desde el generator
-            # response es un generator, necesitamos colectar los bytes
             with open(output_path, "wb") as audio_file:
                 for chunk in response:
                     audio_file.write(chunk)

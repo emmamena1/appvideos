@@ -1,0 +1,38 @@
+C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\core\pydantic_utilities.py:13: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.datetime_parse import parse_date as parse_date
+Generando audio con: aura-celeste-es
+Traceback (most recent call last):
+  File "C:\Users\Emmanuel\Desktop\appvideos\test_aura2.py", line 32, in <module>
+    for chunk in response:
+                 ^^^^^^^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\speak\v1\audio\client.py", line 101, in generate
+    with self._raw_client.generate(
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        text=text,
+        ^^^^^^^^^^
+    ...<9 lines>...
+        request_options=request_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as r:
+    ^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\speak\v1\audio\raw_client.py", line 136, in generate
+    yield _stream()
+          ~~~~~~~^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\speak\v1\audio\raw_client.py", line 119, in _stream
+    raise BadRequestError(
+    ...<8 lines>...
+    )
+deepgram.errors.bad_request_error.BadRequestError: headers: {'content-type': 'application/json', 'dg-error': 'No such model/version combination found.', 'dg-project-id': '2889d7c8-e167-4c62-848f-13fa49ee6447', 'vary': 'origin, access-control-request-method, access-control-request-headers, accept-encoding', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'dg-model-name,dg-model-uuid,dg-char-count,dg-request-id,dg-project-id,dg-error', 'dg-request-id': '2a7b3079-077b-49fd-aa24-c51284e82190', 'content-length': '131', 'date': 'Wed, 07 Jan 2026 07:16:06 GMT'}, status_code: 400, body: {'err_code': 'Bad Request', 'err_msg': 'No such model/version combination found.', 'request_id': '2a7b3079-077b-49fd-aa24-c51284e82190'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Emmanuel\Desktop\appvideos\test_aura2.py", line 41, in <module>
+    print(f"\u274c ERROR CRÍTICO SDK: {e}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
