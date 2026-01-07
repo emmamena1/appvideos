@@ -41,7 +41,7 @@
 ```
 agents/
 ├── scriptwriter.py        (Gemini - Ads Expansive)
-├── audio_generator.py     (Deepgram - Voz)
+├── audio_generator.py     (Edge TTS - Voz Gratis)
 ├── visual_generator.py    (Flux - Industrial Realism)
 └── video_editor.py        (MoviePy - Ensamblaje)
 
@@ -54,7 +54,6 @@ app.py                     (Orquestador - 4 fases)
 
 En `.streamlit/secrets.toml`:
 - `GOOGLE_API_KEY` - Gemini 2.0 Flash
-- `DEEPGRAM_API_KEY` - Audio TTS
 - `TOGETHER_API_KEY` - Imágenes Flux
 
 ---
@@ -105,11 +104,11 @@ appvideos/
 │   └── GEMINI_GEM_SYSTEM_PROMPT.md   (para Gem)
 ├── agents/
 │   ├── scriptwriter.py               (Hook Ads Expansive)
-│   ├── audio_generator.py            (Deepgram Aura)
+│   ├── audio_generator.py            (Edge TTS Gratis)
 │   ├── visual_generator.py           (Flux Industrial)
 │   └── video_editor.py               (MoviePy - Ken Burns + Hormozi)
 ├── assets/
-│   ├── audio/                        (archivos .wav)
+│   ├── audio/                        (archivos .mp3)
 │   ├── images/                       (archivos .png)
 │   ├── final_output/                 (videos .mp4)
 │   └── background_music.mp3          (música opcional)
@@ -156,8 +155,8 @@ Y estaré listo para ayudarte con contexto completo de:
 ### Error común: "Agent no está listo"
 **Fix:** Verifica API keys en `secrets.toml`
 
-### Error común: Deepgram ImportError
-**Fix:** Usa dict para opciones, no `SpeakOptions` (SDK v5.x)
+### Error común: Edge TTS 403 / Handshake
+**Fix:** Bloqueo temporal de IP. Reintentar o cambiar red.
 
 ### Error común: MoviePy timing
 **Fix:** Clamp: `min(end, audio.duration - 0.1)`
@@ -176,7 +175,7 @@ Y estaré listo para ayudarte con contexto completo de:
 ## ✅ ESTADO ACTUAL:
 
 - ✅ Gemini 2.0 Flash migrado y funcionando
-- ✅ Deepgram SDK v5.x configurado (audio TTS)
+- ✅ Edge TTS configurado (Audio TTS Gratis)
 - ✅ Together AI Flux configurado (imágenes industriales)
 - ✅ App con 4 fases implementadas
 - ✅ **Fase 4 (Ensamblaje) COMPLETA:**
