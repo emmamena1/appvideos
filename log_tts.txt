@@ -1,0 +1,46 @@
+Traceback (most recent call last):
+  File "C:\Users\Emmanuel\Desktop\appvideos\agents\audio_generator.py", line 89, in generate_narration
+    asyncio.run(self._generate_audio_async(text, output_path, voice_id))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\Emmanuel\Desktop\appvideos\agents\audio_generator.py", line 127, in _generate_audio_async
+    await communicate.save(output_path)
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\edge_tts\communicate.py", line 523, in save
+    async for message in self.stream():
+    ...<7 lines>...
+            metadata.write("\n")
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\edge_tts\communicate.py", line 506, in stream
+    async for message in self.__stream():
+        yield message
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\edge_tts\communicate.py", line 368, in __stream
+    ) as session, session.ws_connect(
+                  ~~~~~~~~~~~~~~~~~~^
+        f"{WSS_URL}&ConnectionId={connect_id()}",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+        ssl=ssl_ctx,
+        ^^^^^^^^^^^^
+    ) as websocket:
+    ^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\aiohttp\client.py", line 1510, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\aiohttp\client.py", line 1093, in _ws_connect
+    raise WSServerHandshakeError(
+    ...<5 lines>...
+    )
+aiohttp.client_exceptions.WSServerHandshakeError: 403, message='Invalid response status', url='wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=ae838cf89b854f7a9eeaecdc4005df39'
+[*] Generando audio GRATIS con Edge TTS...
+   Voz: es-MX-DaliaNeural
+[!] Error generando audio con Edge TTS:
+   WSServerHandshakeError: 403, message='Invalid response status', url='wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=ae838cf89b854f7a9eeaecdc4005df39'
+
+[!] PRUEBA FALLIDA: 403, message='Invalid response status', url='wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=ae838cf89b854f7a9eeaecdc4005df39'

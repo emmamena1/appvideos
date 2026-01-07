@@ -173,7 +173,7 @@ elif st.session_state['step'] == 2:
             visual_agent = VisualGeneratorAgent()
             
             if not audio_agent.is_ready():
-                st.error("❌ AudioGeneratorAgent NO está listo. Verifica DEEPGRAM_API_KEY en .streamlit/secrets.toml")
+                st.error("❌ Edge TTS no disponible. Ejecuta: pip install edge-tts")
             elif not visual_agent.is_ready():
                 st.error("❌ VisualGeneratorAgent NO está listo. Verifica TOGETHER_API_KEY en .streamlit/secrets.toml")
             else:
@@ -221,8 +221,8 @@ elif st.session_state['step'] == 3:
                 
                 # 1️⃣ GENERAR AUDIO (Deepgram Aura)
                 with col_audio:
-                    st.markdown("**🎤 Generando Voz Neural (Deepgram Aura - Latino)...**")
-                    audio_file = f"scene_{scene_num}.wav"
+                    st.markdown("**🎤 Generando Voz Neural (Edge TTS - Mexicana)...**")
+                    audio_file = f"scene_{scene_num}.mp3"
                     audio_path = audio_agent.generate_narration(scene['narration'], audio_file)
                     
                     if audio_path:
