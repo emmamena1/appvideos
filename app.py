@@ -97,12 +97,22 @@ if st.session_state['step'] == 1:
         placeholder="Ej: Consultoría de Meta Ads"
     )
 
+    # 🆕 NUEVO: Selector de número de escenas
+    num_scenes = st.slider(
+        "📊 Número de Escenas",
+        min_value=3,
+        max_value=5,
+        value=4,
+        help="Videos más cortos (3 escenas) = Mayor retención. Videos más largos (5 escenas) = Más información."
+    )
+    st.caption(f"⏱️ Duración estimada: {num_scenes * 8} - {num_scenes * 10} segundos")
+
     if st.button("⚡ GENERAR GUION MAESTRO (Gemini 2.0 Flash)"):
         if topic and product:
             with st.spinner("🧠 Gemini aplicando lógica de 'Ads Expansive' (Dolor → Intriga → Solución)..."):
                 try:
                     writer = ScriptWriterAgent() 
-                    script = writer.generate_script(topic, product)
+                    script = writer.generate_script(topic, product, num_scenes=num_scenes)
                     
                     if script:
                         st.session_state['script_data'] = script
@@ -157,7 +167,7 @@ elif st.session_state['step'] == 2:
                     f"👁️ Prompt Visual {i+1} (Inglés)",
                     scene.get('visual_prompt', ''),
                     height=120,
-                    help="El sistema inyectará automáticamente el estilo 'Industrial Realism' de Quantum Clic"
+                    help="El sistema inyectará automáticamente el estilo 'Cinematic Style' de Quantum Clic"
                 )
                 
                 scene['narration'] = nar
@@ -289,8 +299,8 @@ elif st.session_state['step'] == 3:
             st.markdown("---")
             st.info("🔜 **Próximo Paso:** Fase 4 - Ensamblaje con MoviePy (VideoEditorAgent)")
             
-            if st.button("🎬 Continuar al Editor de Video (Próximamente)"):
-                st.session_state['step'] = 4
+            if st.button("👁️ Revisar Assets Generados", use_container_width=True, type="primary"):
+                st.session_state['step'] = 3.5  # 🆕 IR A REVISIÓN
                 st.rerun()
         
         else:
@@ -301,6 +311,130 @@ elif st.session_state['step'] == 3:
             if st.button("⬅️ Volver a Editar Escenas"):
                 st.session_state['step'] = 2
                 st.rerun()
+
+# ========================================================================
+# PASO 3.5: REVISIÓN DE ASSETS (Human-in-the-Loop Visual)
+# ========================================================================
+elif st.session_state['step'] == 3.5:
+    st.title("🎨 Revisión de Material Visual")
+    st.markdown("Revisa las imágenes y audios generados. Puedes regenerar individualmente antes del ensamblaje final.")
+    
+    scenes = st.session_state['script_data'].get('scenes', [])
+    
+    if not scenes:
+        st.error("❌ No hay escenas para revisar")
+        if st.button("← Volver"):
+            st.session_state['step'] = 2
+            st.rerun()
+    else:
+        visual_agent = VisualGeneratorAgent()
+        audio_agent = AudioGeneratorAgent()
+        
+        st.markdown("---")
+        
+        for idx, scene in enumerate(scenes):
+            scene_num = idx + 1
+            
+            with st.expander(f"🎬 Escena {scene_num} - {'✅ Completa' if scene.get('image_path') and scene.get('audio_path') else '⚠️ Incompleta'}", expanded=True):
+                
+                col_preview, col_controls = st.columns([2, 1])
+                
+                # PREVIEW DE ASSETS
+                with col_preview:
+                    # Mostrar imagen actual
+                    if scene.get('image_path') and os.path.exists(scene['image_path']):
+                        st.image(scene['image_path'], use_container_width=True)
+                    else:
+                        st.warning("⚠️ Imagen no disponible")
+                    
+                    # Mostrar audio actual
+                    if scene.get('audio_path') and os.path.exists(scene['audio_path']):
+                        st.audio(scene['audio_path'])
+                    else:
+                        st.warning("⚠️ Audio no disponible")
+                    
+                    # Mostrar narración
+                    st.caption(f"**📝 Narración:** {scene.get('narration', 'N/A')}")
+                
+                # CONTROLES DE REGENERACIÓN
+                with col_controls:
+                    st.markdown("**🔄 Regenerar Assets:**")
+                    
+                    # Input para nuevo prompt visual (opcional)
+                    new_prompt = st.text_area(
+                        f"Nuevo Prompt Visual (opcional)",
+                        value=scene.get('visual_prompt', ''),
+                        height=100,
+                        key=f"prompt_{scene_num}",
+                        help="Edita el prompt en inglés para cambiar la imagen. Deja vacío para usar el original."
+                    )
+                    
+                    col_btn1, col_btn2 = st.columns(2)
+                    
+                    # Botón regenerar imagen
+                    if col_btn1.button(f"🎨 Regenerar Imagen", key=f"regen_img_{scene_num}", use_container_width=True):
+                        with st.spinner(f"🎨 Regenerando imagen {scene_num}..."):
+                            # Eliminar imagen vieja
+                            if scene.get('image_path') and os.path.exists(scene['image_path']):
+                                os.remove(scene['image_path'])
+                            
+                            # Usar nuevo prompt o el original
+                            prompt_to_use = new_prompt if new_prompt.strip() else scene.get('visual_prompt', '')
+                            scene['visual_prompt'] = prompt_to_use  # Actualizar en sesión
+                            
+                            # Generar nueva imagen
+                            img_file = f"scene_{scene_num}.png"
+                            img_path = visual_agent.generate_image(prompt_to_use, img_file)
+                            
+                            if img_path:
+                                scene['image_path'] = img_path
+                                st.success("✅ Imagen regenerada")
+                                st.rerun()
+                            else:
+                                st.error("❌ Error al regenerar imagen")
+                    
+                    # Botón regenerar audio
+                    if col_btn2.button(f"🔊 Regenerar Audio", key=f"regen_audio_{scene_num}", use_container_width=True):
+                        with st.spinner(f"🔊 Regenerando audio {scene_num}..."):
+                            # Eliminar audio viejo
+                            if scene.get('audio_path') and os.path.exists(scene['audio_path']):
+                                os.remove(scene['audio_path'])
+                            
+                            # Generar nuevo audio
+                            audio_file = f"scene_{scene_num}.mp3"
+                            audio_path = audio_agent.generate_narration(scene['narration'], audio_file)
+                            
+                            if audio_path:
+                                scene['audio_path'] = audio_path
+                                st.success("✅ Audio regenerado")
+                                st.rerun()
+                            else:
+                                st.error("❌ Error al regenerar audio")
+                
+                st.markdown("---")
+        
+        # BOTONES DE NAVEGACIÓN
+        st.markdown("---")
+        col_back, col_next = st.columns(2)
+        
+        with col_back:
+            if st.button("⬅️ Volver a Editar Guion", use_container_width=True):
+                st.session_state['step'] = 2
+                st.rerun()
+        
+        with col_next:
+            # Validar que todos los assets estén listos
+            all_ready = all(
+                scene.get('image_path') and scene.get('audio_path') 
+                for scene in scenes
+            )
+            
+            if all_ready:
+                if st.button("🎬 Continuar al Ensamblaje Final", use_container_width=True, type="primary"):
+                    st.session_state['step'] = 4
+                    st.rerun()
+            else:
+                st.error("⚠️ Faltan assets por generar. Completa todas las escenas antes de continuar.")
 
 # ========================================================================
 # PASO 4: ENSAMBLAJE FINAL (MoviePy 1.0.3)

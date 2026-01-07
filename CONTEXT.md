@@ -73,7 +73,7 @@ En `.streamlit/secrets.toml`:
 - Validar agentes antes de producir
 - Incluir traceback completo en errores
 - Alinear decisiones con Quantum Clic
-- Mantener cache inteligente (ahorro de créditos)
+- Cache Deshabilitado: Garantizar contenido fresco (imágenes y audio únicos cada vez)
 
 ---
 
@@ -86,9 +86,9 @@ Fase 2: Gemini genera Guion (Ads Expansive)
    ↓
 Fase 3: Human-in-the-Loop (Aprobación + TSL)
    ↓
-Fase 4: Producción (Audio + Visual en paralelo)
-   ↓ 
-Fase 5: Ensamblaje (MoviePy 1.0.3) ✅ IMPLEMENTADO
+Fase 3.5: Asset Review (Regeneración Selectiva) ✅ NUEVO
+   ↓
+Fase 4: Producción Final (Ensamblaje MoviePy)
    ├── Zoom Ken Burns (retención visual)
    ├── Subtítulos Hormozi (amarillo + borde negro)
    ├── Audio Ducking (música 15% + narración 100%)
@@ -180,6 +180,10 @@ Y estaré listo para ayudarte con contexto completo de:
 - ✅ Edge TTS Hardened configurado (Audio TTS Gratis + Anti-403)
 - ✅ Together AI Flux configurado (imágenes cinematográficas)
 - ✅ App con 4 fases implementadas
+- ✅ **Fase 3.5 (Asset Review) COMPLETA:**
+  - Regeneración selectiva de imágenes (Flux)
+  - Regeneración selectiva de audio (Edge TTS)
+  - Validación antes del ensamblaje
 - ✅ **Fase 4 (Ensamblaje) COMPLETA:**
   - VideoEditorAgent con MoviePy 1.0.3
   - Zoom Ken Burns para retención
@@ -202,7 +206,7 @@ Y estaré listo para ayudarte con contexto completo de:
 
 ---
 
-**Última actualización:** 2026-01-07  
-**Versión:** 2.0 (Fase 4 Completa)  
+**Última actualización:** 2026-01-08  
+**Versión:** 2.1 (Generalización + Asset Review)  
 **Proyecto:** Video Factory AI (Quantum Clic)
 **Estado:** ✅ SISTEMA COMPLETO - Listo para Producción
