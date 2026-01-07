@@ -48,9 +48,9 @@ class VisualGeneratorAgent:
             
             output_path = os.path.join(output_dir, filename)
 
-            # Cache Inteligente
-            if os.path.exists(output_path):
-                return output_path
+            # Cache DESHABILITADO - Siempre generar nueva imagen
+            # if os.path.exists(output_path):
+            #     return output_path
 
             # ✨ MEJORA DE CALIDAD GENÉRICA (No fuerza estilo industrial)
             # El prompt del scriptwriter ya define el contexto visual

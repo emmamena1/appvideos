@@ -1,6 +1,8 @@
 # CONTEXT.md - Video Factory AI
 
-**INSTRUCCIONES PARA ANTIGRAVITY:** Lee estos archivos antes de responder cualquier pregunta sobre este proyecto.
+**INSTRUCCIONES PARA ANTIGRAVITY:**
+1. Lee estos archivos antes de responder.
+2. ⚠️ **PROTOCOLO OBLIGATORIO:** Al finalizar CUALQUIER tarea de código, DEBES actualizar este archivo (`CONTEXT.md`) con el nuevo estado del sistema y realizar un `git push` de todos los cambios inmediatamente. NO ESPERES a que el usuario lo pida.
 
 ---
 
