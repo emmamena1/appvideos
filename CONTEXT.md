@@ -30,7 +30,7 @@
 - **Cerebro:** Gemini 2.0 Flash (google-genai SDK v1.56.0)
 - **Voz:** Edge TTS Hardened (Gratis, Anti-403, es-MX-DaliaNeural)
 - **Visual:** Together AI Flux-Schnell (1024x1792, 9:16)
-- **Video:** MoviePy 1.0.3 (NUNCA actualizar a 2.x)
+- **Video:** MoviePy 1.0.3 (NUNCA 2.x) + Pillow 9.5.0 (Strict)
 
 ### Metodología: Quantum Clic
 1. **Ads Expansive:** Hook de 3 pasos (Dolor → Consecuencia → Intriga)
@@ -164,8 +164,8 @@ Y estaré listo para ayudarte con contexto completo de:
 ### Error común: Flux no genera
 **Fix:** Verifica créditos en Together AI + formato .png
 
-### Error común: TextClip falla (subtitles)
-**Fix:** Instalar ImageMagick con "legacy utilities"
+### Error común: Pillow ANTIALIAS
+**Fix:** Downgrade obligatorio: `pip install Pillow==9.5.0`
 
 ### Error común: Module not found
 **Fix:** `python -m pip install [package]`

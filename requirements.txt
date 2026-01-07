@@ -11,7 +11,7 @@ decorator==4.4.2
 # Image I/O
 imageio==2.37.2
 imageio-ffmpeg==0.6.0
-pillow>=10.0.0  # Requiere parche ANTIALIAS en código
+pillow==9.5.0     # FIX: MoviePy 1.0.3 requiere ANTIALIAS (removed in 10.x)
 
 # Web Framework
 streamlit>=1.52.0
