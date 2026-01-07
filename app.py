@@ -87,17 +87,62 @@ if st.session_state['step'] == 1:
     st.title("🚀 Planificador de Producción")
     st.markdown("Define el objetivo para activar la metodología **Quantum Clic** (Ads Expansive).")
     
+    # 🆕 PLANTILLAS PRE-CONFIGURADAS
+    st.markdown("### 🎯 ¿No sabes qué crear? Usa una plantilla:")
+    
+    templates = {
+        "": {"topic": "", "product": ""},  # Opción vacía
+        "🎯 Marketing Digital": {
+            "topic": "Mis anuncios de Facebook no están convirtiendo",
+            "product": "Consultoría de Meta Ads"
+        },
+        "💪 Fitness & Salud": {
+            "topic": "No logro bajar de peso aunque hago ejercicio",
+            "product": "Programa de Entrenamiento Personalizado"
+        },
+        "💰 Finanzas Personales": {
+            "topic": "No sé cómo invertir mi dinero de forma segura",
+            "product": "Curso de Inversiones para Principiantes"
+        },
+        "🍔 Comida & Recetas": {
+            "topic": "Mis recetas caseras no tienen el sabor profesional de restaurante",
+            "product": "Curso de Cocina Profesional Online"
+        },
+        "🎓 Educación Online": {
+            "topic": "Mi hijo tiene problemas para entender matemáticas",
+            "product": "Tutorías Personalizadas 1 a 1"
+        },
+        "🏠 Bienes Raíces": {
+            "topic": "Quiero vender mi casa pero no encuentro compradores",
+            "product": "Servicio de Marketing Inmobiliario"
+        }
+    }
+    
+    template_choice = st.selectbox(
+        "Selecciona una plantilla (o deja vacío para crear desde cero):",
+        list(templates.keys()),
+        help="Esto llenará automáticamente los campos abajo. Puedes editarlos después."
+    )
+    
+    if template_choice != "":
+        st.success(f"✅ Plantilla '{template_choice}' cargada. Personaliza los campos abajo.")
+    
+    st.markdown("---")
+    
+    # Inputs con valores pre-cargados de plantilla
     col1, col2 = st.columns(2)
     topic = col1.text_input(
         "💡 Tema / Dolor del Cliente",
+        value=templates[template_choice]["topic"],
         placeholder="Ej: Mis anuncios de Facebook no convierten..."
     )
     product = col2.text_input(
         "🎯 Producto/Servicio a Vender",
+        value=templates[template_choice]["product"],
         placeholder="Ej: Consultoría de Meta Ads"
     )
 
-    # 🆕 NUEVO: Selector de número de escenas
+    # Selector de número de escenas
     num_scenes = st.slider(
         "📊 Número de Escenas",
         min_value=3,
@@ -109,7 +154,7 @@ if st.session_state['step'] == 1:
 
     if st.button("⚡ GENERAR GUION MAESTRO (Gemini 2.0 Flash)"):
         if topic and product:
-            with st.spinner("🧠 Gemini aplicando lógica de 'Ads Expansive' (Dolor → Intriga → Solución)..."):
+            with st.spinner("🧠 Gemini aplicando lógica de 'Ads Expansive'..."):
                 try:
                     writer = ScriptWriterAgent() 
                     script = writer.generate_script(topic, product, num_scenes=num_scenes)

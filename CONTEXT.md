@@ -80,7 +80,7 @@ En `.streamlit/secrets.toml`:
 ## 🚀 FLUJO DE PRODUCCIÓN:
 
 ```
-Fase 1: Input (Tema + Producto)
+Fase 1: Input (Plantillas Pre-configuradas o Manual)
    ↓
 Fase 2: Gemini genera Guion (Ads Expansive)
    ↓
@@ -180,6 +180,9 @@ Y estaré listo para ayudarte con contexto completo de:
 - ✅ Edge TTS Hardened configurado (Audio TTS Gratis + Anti-403)
 - ✅ Together AI Flux configurado (imágenes cinematográficas)
 - ✅ App con 4 fases implementadas
+- ✅ **Fase 1 (Input) MEJORADA:**
+  - Sistema de Plantillas Pre-configuradas (Marketing, Fitness, etc.)
+  - Input manual flexible
 - ✅ **Fase 3.5 (Asset Review) COMPLETA:**
   - Regeneración selectiva de imágenes (Flux)
   - Regeneración selectiva de audio (Edge TTS)
