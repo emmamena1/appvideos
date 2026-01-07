@@ -30,7 +30,7 @@
 - **Cerebro:** Gemini 2.0 Flash (google-genai SDK v1.56.0)
 - **Voz:** Edge TTS Hardened (Gratis, Anti-403, es-MX-DaliaNeural)
 - **Visual:** Together AI Flux-Schnell (1024x1792, 9:16)
-- **Video:** MoviePy 1.0.3 (NUNCA 2.x) + Pillow 9.5.0 (Strict)
+- **Video:** MoviePy 1.0.3 + Pillow (Latest w/ ANTIALIAS Patch)
 
 ### Metodología: Quantum Clic
 1. **Ads Expansive:** Hook de 3 pasos (Dolor → Consecuencia → Intriga)
@@ -165,7 +165,7 @@ Y estaré listo para ayudarte con contexto completo de:
 **Fix:** Verifica créditos en Together AI + formato .png
 
 ### Error común: Pillow ANTIALIAS
-**Fix:** Downgrade obligatorio: `pip install Pillow==9.5.0`
+**Fix:** Código parcheado (`PIL.Image.ANTIALIAS = LANCZOS`) en `app.py`.
 
 ### Error común: Module not found
 **Fix:** `python -m pip install [package]`

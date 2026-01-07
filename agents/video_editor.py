@@ -1,5 +1,10 @@
 import os
 import streamlit as st
+import PIL.Image
+# FIX: Parche ANTIALIAS para MoviePy 1.0.3 en Python 3.10+
+if not hasattr(PIL.Image, 'ANTIALIAS'):
+    PIL.Image.ANTIALIAS = PIL.Image.LANCZOS
+
 from moviepy.editor import *
 from moviepy.video.fx.all import resize
 # Importación específica para audio loop en v1.0.3

@@ -1,6 +1,10 @@
 import streamlit as st
 import json
 import os
+import PIL.Image
+# FIX: Parche de compatibilidad para MoviePy 1.0.3 con Pillow reciente
+if not hasattr(PIL.Image, 'ANTIALIAS'):
+    PIL.Image.ANTIALIAS = PIL.Image.LANCZOS
 
 # Importamos los agentes (Arquitectura Quantum Clic)
 from agents.scriptwriter import ScriptWriterAgent
