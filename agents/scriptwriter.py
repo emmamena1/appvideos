@@ -6,7 +6,6 @@ import os
 from typing import Dict, List, Optional
 
 # --- CONFIGURACIÓN DE SEGURIDAD ---
-# Verifica si la clave existe en los secretos de Streamlit
 if "GOOGLE_API_KEY" in st.secrets:
     client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
 else:
@@ -15,9 +14,7 @@ else:
 class ScriptWriterAgent:
     def __init__(self, model_name: str = "gemini-2.0-flash"):
         """
-        Inicializa el agente.
-        NOTA: Usamos 'gemini-2.0-flash' - la última versión estable de Gemini.
-        Otros modelos disponibles: gemini-2.5-flash, gemini-1.5-pro, gemini-2.5-pro
+        Inicializa el agente de guion con Gemini 2.0 Flash.
         """
         self.model_name = model_name
         
@@ -29,14 +26,14 @@ class ScriptWriterAgent:
         3. INTRIGA: Plantea una contradicción o solución desconocida.
         """
         
-        # 👁️ ESTILO VISUAL (Industrial Realism)
+        # 👁️ ESTILO VISUAL GENÉRICO (Adaptable al contexto)
         self.visual_style = """
-        ESTILO VISUAL OBLIGATORIO (FLUX PROMPTS - INGLÉS):
-        - Style: Ultra-realistic documentary industrial photography.
-        - Lighting: Soft directional light, volumetric shadows, cinematic contrast.
-        - Texture: Visible pores, dust particles, grease, brushed metal, fabric wrinkles.
-        - Camera: 50mm lens, f/2.8, depth of field (bokeh).
-        - NEGATIVE: No CGI, no 3D render, no plastic skin, no illustration.
+        ESTILO VISUAL (FLUX PROMPTS - INGLÉS):
+        - Style: Ultra-realistic, cinematic photography that matches the topic context.
+        - Lighting: Professional studio or natural lighting appropriate to the scene.
+        - Quality: High resolution, sharp details, realistic textures.
+        - Camera: Professional composition with depth of field.
+        - Adaptability: The visual style should match the topic (tech → modern/sleek, food → appetizing/warm, etc.)
         """
 
     def generate_script(self, topic: str, product_name: str = "Producto") -> Optional[Dict]:
@@ -45,7 +42,7 @@ class ScriptWriterAgent:
         """
         
         system_prompt = f"""
-        ACTÚA COMO: Un Director Creativo experto en Ventas Orgánicas y Fotografía Industrial.
+        ACTÚA COMO: Un Director Creativo experto en Ventas Orgánicas y Contenido Viral.
         
         TU MISIÓN: Crear un guion para un Video Corto (Short/Reel) de 30-45 segundos sobre: '{topic}'.
         El objetivo es VENDER u obtener ATENCIÓN masiva para: '{product_name}'.
@@ -64,14 +61,14 @@ class ScriptWriterAgent:
                     "id": 1,
                     "role": "hook", 
                     "narration": "Texto exacto que dirá la voz en off...",
-                    "visual_prompt": "Prompt detallado en INGLÉS para Flux-Schnell siguiendo el estilo industrial...",
+                    "visual_prompt": "Prompt detallado en INGLÉS para Flux-Schnell. Describe la escena de forma específica y coherente con el tema '{topic}'...",
                     "estimated_duration": 3.5
                 }},
                 {{
                     "id": 2,
                     "role": "body", 
                     "narration": "Desarrollo del problema...",
-                    "visual_prompt": "Prompt visual coherente...",
+                    "visual_prompt": "Prompt visual coherente con el tema...",
                     "estimated_duration": 5.0
                 }}
             ]
@@ -80,7 +77,8 @@ class ScriptWriterAgent:
         REGLAS CRÍTICAS:
         1. La narración debe ser coloquial, directa y con ritmo rápido.
         2. Los 'visual_prompt' deben estar OBLIGATORIAMENTE en INGLÉS.
-        3. El JSON no debe tener errores de sintaxis (comas extra, etc.).
+        3. Los prompts visuales deben ser ESPECÍFICOS al tema '{topic}' (evita términos genéricos).
+        4. El JSON no debe tener errores de sintaxis (comas extra, etc.).
         """
 
         try:
@@ -89,7 +87,7 @@ class ScriptWriterAgent:
                 st.error("❌ Error: API key de Google no configurada en secrets.toml")
                 return None
             
-            # Solicitamos respuesta a Gemini usando el nuevo SDK
+            # Solicitamos respuesta a Gemini
             response = client.models.generate_content(
                 model=self.model_name,
                 contents=system_prompt
@@ -104,6 +102,5 @@ class ScriptWriterAgent:
             st.error(f"❌ Error en ScriptWriter: {str(e)}")
             return None
 
-# Bloque de prueba (solo para verificar que no explote al ejecutarlo directo)
 if __name__ == "__main__":
     print("✅ El archivo scriptwriter.py se ha cargado correctamente.")

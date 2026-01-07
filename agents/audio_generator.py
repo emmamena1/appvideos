@@ -1,190 +1,105 @@
-# agents/audio_generator.py - VERSIÓN CORREGIDA
+# agents/audio_generator.py - VERSIÓN EDGE TTS (HARDENED)
 
 import os
 from pathlib import Path
+import edge_tts
 import asyncio
-
-try:
-    import edge_tts
-    EDGE_TTS_AVAILABLE = True
-except ImportError:
-    EDGE_TTS_AVAILABLE = False
-    print("⚠️ edge-tts no instalado. Ejecuta: pip install edge-tts")
-
+import streamlit as st
+import time
 
 class AudioGeneratorAgent:
     """
-    Agente de generación de audio con Microsoft Edge TTS (GRATIS)
-    Compatible con metodología Quantum Clic
+    Genera audio GRATIS con Microsoft Edge TTS.
+    Versión reforzada con reintentos anti-403 y timeout.
     """
     
     def __init__(self):
         """
-        Inicializa el generador de audio Edge TTS
-        NO requiere API keys - 100% GRATIS
+        Inicializa el agente con voz en español recomendada.
+        "es-MX-DaliaNeural" - Mexicana, profesional y cálida (RECOMENDADA)
         """
-        if not EDGE_TTS_AVAILABLE:
-            raise ImportError(
-                "edge-tts no instalado. Ejecuta: pip install edge-tts"
-            )
-        
-        # Voces recomendadas para Quantum Clic (Ads Expansive)
-        self.voices = {
-            "mx_female": "es-MX-DaliaNeural",      # Mexicana, profesional ⭐
-            "mx_male": "es-MX-JorgeNeural",        # Mexicano, confiable
-            "co_female": "es-CO-SalomeNeural",     # Colombiana, energética
-            "es_male": "es-ES-AlvaroNeural",       # España, formal
-            "ar_male": "es-AR-TomasNeural"         # Argentina, técnico
-        }
-        
-        # Voz por defecto para ads industriales
-        self.default_voice = self.voices["mx_female"]
+        self.voice = "es-MX-DaliaNeural" 
+        self.max_retries = 3  # Reintentos por fallo 403
+        self.retry_delay = 2  # Segundos entre reintentos
+        self.default_voice = self.voice # Alias para compatibilidad con app.py
         
     def is_ready(self):
-        """
-        Validación requerida por arquitectura del proyecto
-        Returns: bool
-        """
-        return EDGE_TTS_AVAILABLE
+        """Siempre listo, no requiere API Key."""
+        return True
     
-    def generate_narration(self, text, output_path, voice=None):
+    def generate_narration(self, text: str, filename: str) -> str:
         """
-        Genera narración profesional GRATIS con Edge TTS
+        Genera archivo de audio .mp3 usando Edge TTS con reintentos.
         
         Args:
-            text (str): Texto del guion en español
-            output_path (str): Ruta absoluta donde guardar .mp3
-            voice (str, optional): Voz específica o usa default
+            text: Texto a narrar
+            filename: Nombre de archivo (ej: scene_1.mp3)
             
         Returns:
-            str: Ruta absoluta del archivo generado
-            
-        Raises:
-            ValueError: Si el texto está vacío
-            FileNotFoundError: Si no se genera el audio
+            str: Path absoluto al archivo generado
         """
-        # Validaciones
-        if not text or not text.strip():
-            raise ValueError("El texto no puede estar vacío")
-        
-        if not self.is_ready():
-            raise RuntimeError("Edge TTS no está disponible")
-        
-        # Usar voz por defecto si no se especifica
-        voice_id = voice or self.default_voice
-        
         try:
-            # Convertir a ruta absoluta (regla CONTEXT.md)
-            output_path = os.path.abspath(output_path)
+            # Asegurar extension .mp3
+            if filename.endswith(".wav"):
+                filename = filename.replace(".wav", ".mp3")
+                
+            output_dir = os.path.join("assets", "audio")
+            os.makedirs(output_dir, exist_ok=True)
+            output_path = os.path.join(output_dir, filename)
             
-            # Crear directorio assets/audio si no existe
-            output_dir = Path(output_path).parent
-            output_dir.mkdir(parents=True, exist_ok=True)
+            # Cache check (>0 bytes)
+            if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                print(f"[CACHE] Audio encontrado: {output_path}")
+                return output_path
+
+            print(f"[*] Generando audio: {text[:30]}...")
             
-            print(f"[*] Generando audio GRATIS con Edge TTS...")
-            print(f"   Voz: {voice_id}")
-            # print(f"   Texto: {text[:50]}..." if len(text) > 50 else f"   Texto: {text}") # EVITAR UNICODE ERRORS
-            
-            # Generar audio usando asyncio
-            asyncio.run(self._generate_audio_async(text, output_path, voice_id))
-            
-            # Validar que el archivo se creó
-            if not Path(output_path).exists():
-                raise FileNotFoundError(
-                    f"Audio no generado en {output_path}"
-                )
-            
-            file_size = Path(output_path).stat().st_size
-            duration = self._estimate_duration(text)
-            
-            print(f"[+] Audio generado exitosamente:")
-            print(f"   Archivo: {output_path}")
-            print(f"   Tamaño: {file_size / 1024:.2f} KB")
-            print(f"   Duración estimada: {duration:.1f}s")
-            
-            return output_path
-            
+            # Generar con reintentos
+            for attempt in range(self.max_retries):
+                try:
+                    asyncio.run(self._generate_audio_async(text, output_path, self.voice))
+                    
+                    # Validar
+                    if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                        print(f"[SUCCESS] Audio generado en intento {attempt+1}")
+                        return output_path
+                    else:
+                         print(f"[FAIL] Archivo vacío en intento {attempt+1}")
+                        
+                except Exception as e:
+                    print(f"[ERROR] Intento {attempt+1} falló: {e}")
+                    
+                    if "403" in str(e) and attempt < self.max_retries - 1:
+                        if "streamlit" in str(type(st)): # Check si estamos en contexto streamlit
+                             st.warning(f"⚠️ Error 403 (Intento {attempt+1}/{self.max_retries}). Reintentando en {self.retry_delay}s...")
+                        time.sleep(self.retry_delay)
+                        continue
+                    else:
+                        if attempt == self.max_retries - 1:
+                            if "streamlit" in str(type(st)):
+                                st.error("❌ No se pudo generar audio tras múltiples intentos (Posible bloqueo 403)")
+                        # Si no es recuperable o último intento, no re-anzamos inmediatamente para permitir el return None final
+                        pass
+                        
+            st.error("❌ No se pudo generar audio tras múltiples intentos")
+            return None
+                
         except Exception as e:
-            print(f"[!] Error generando audio con Edge TTS:")
-            print(f"   {type(e).__name__}: {e}")
-            
-            # Traceback completo (regla CONTEXT.md)
+            st.error(f"❌ Error Crítico Edge TTS: {e}")
             import traceback
             traceback.print_exc()
-            
-            raise
+            return None
     
-    async def _generate_audio_async(self, text, output_path, voice):
-        """
-        Función interna async para Edge TTS
-        
-        Args:
-            text (str): Texto a narrar
-            output_path (str): Ruta del archivo
-            voice (str): ID de voz de Edge TTS
-        """
-        communicate = edge_tts.Communicate(text, voice)
-        await communicate.save(output_path)
-    
-    def _estimate_duration(self, text):
-        """
-        Estima duración del audio basándose en palabras
-        Español: ~150 palabras por minuto
-        
-        Args:
-            text (str): Texto narrado
-            
-        Returns:
-            float: Duración estimada en segundos
-        """
-        word_count = len(text.split())
-        words_per_second = 150 / 60  # ~2.5 palabras/segundo
-        return word_count / words_per_second
-    
-    def list_voices(self):
-        """
-        Lista todas las voces disponibles
-        Útil para testear diferentes opciones
-        
-        Returns:
-            dict: Diccionario de voces disponibles
-        """
-        return self.voices
+    async def _generate_audio_async(self, text, output_path, voice_id):
+        """Helper async con timeout para evitar cuelgues."""
+        communicate = edge_tts.Communicate(text, voice_id)
+        await asyncio.wait_for(communicate.save(output_path), timeout=30)
 
-
-# === PRUEBA RÁPIDA DEL AGENTE ===
+# === PRUEBA RÁPIDA ===
 if __name__ == "__main__":
-    """
-    Test del agente de audio
-    Ejecuta: python agents/audio_generator.py
-    """
-    
-    # Inicializar agente
+    agent = AudioGeneratorAgent()
     try:
-        agent = AudioGeneratorAgent()
-        
-        if not agent.is_ready():
-            print("Agente no está listo")
-            exit(1)
-        
-        # Texto de prueba (Hook Ads Expansive)
-        texto_prueba = """
-        ¿Estás perdiendo tiempo valioso en procesos manuales?
-        Cada minuto perdido cuesta dinero a tu empresa.
-        Descubre cómo automatizar tu negocio en solo 3 pasos.
-        """
-        
-        # Generar audio
-        output_dir = "assets/audio"
-        os.makedirs(output_dir, exist_ok=True)
-        audio_path = agent.generate_narration(
-            text=texto_prueba.strip(),
-            output_path="assets/audio/test_edge_tts.mp3"
-        )
-        
-        print(f"\n[+] PRUEBA EXITOSA")
-        print(f"Reproduce el audio: {audio_path}")
-        
+        agent.generate_narration("Prueba de audio robusta con reintentos.", "test_hardened.mp3")
+        print("Prueba completada.")
     except Exception as e:
-        print(f"\n[!] PRUEBA FALLIDA: {e}")
-        exit(1)
+        print(f"Prueba fallida: {e}")

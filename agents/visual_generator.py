@@ -7,7 +7,7 @@ class VisualGeneratorAgent:
     def __init__(self):
         """
         Inicializa el agente visual con Together AI (Flux-Schnell).
-        Aplica la "Fórmula Maestra" de Quantum Clic (Mockups).
+        Genera imágenes ultra-realistas adaptadas al contexto del guion.
         """
         self.api_key = st.secrets.get("TOGETHER_API_KEY")
         self.client = None
@@ -25,7 +25,7 @@ class VisualGeneratorAgent:
     def generate_image(self, prompt: str, filename: str) -> str:
         """
         Genera imagen usando Flux-Schnell.
-        Inyecta automáticamente el estilo 'Industrial Realism' de Quantum Clic.
+        Aplica mejoras de calidad cinematográfica sin forzar un estilo específico.
         
         Args:
             prompt: Prompt visual en inglés (viene desde ScriptWriter)
@@ -42,7 +42,7 @@ class VisualGeneratorAgent:
             output_dir = os.path.join("assets", "images")
             os.makedirs(output_dir, exist_ok=True)
 
-            # Forzar extensión .png para calidad y compatibilidad
+            # Forzar extensión .png
             if not filename.lower().endswith(".png"):
                 filename = filename.rsplit(".", 1)[0] + ".png"
             
@@ -52,10 +52,9 @@ class VisualGeneratorAgent:
             if os.path.exists(output_path):
                 return output_path
 
-            # ✨ INYECCIÓN DE ESTILO INDUSTRIAL (Basado en Agente 'Mockups' de Quantum Clic)
-            # El prompt ya viene profesional desde ScriptWriter, 
-            # solo aseguramos la calidad ultra-realista
-            final_prompt = f"{prompt}, ultra-realistic, 8k, highly detailed, industrial photography, 50mm lens, f/2.8"
+            # ✨ MEJORA DE CALIDAD GENÉRICA (No fuerza estilo industrial)
+            # El prompt del scriptwriter ya define el contexto visual
+            final_prompt = f"{prompt}, ultra-realistic, 8k, highly detailed, cinematic lighting, professional photography"
 
             # Generación con Flux Schnell (9:16 Vertical para Shorts)
             response = self.client.images.generate(

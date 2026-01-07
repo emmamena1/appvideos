@@ -14,8 +14,8 @@ from agents.video_editor import VideoEditorAgent  # NUEVO AGENTE - Fase 4
 
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
-    page_title="Industrial Video Factory v2 | Quantum Clic",
-    page_icon="🏭",
+    page_title="Video Factory AI | Quantum Clic",
+    page_icon="🎬",
     layout="wide"
 )
 
@@ -41,7 +41,7 @@ if 'final_video_path' not in st.session_state:
 
 # --- BARRA LATERAL (OPS CENTER) ---
 with st.sidebar:
-    st.title("🏭 OPS CENTER v2.0")
+    st.title("🎬 OPS CENTER v2.0")
     st.caption("🎯 Arquitectura: Quantum Clic + Antigravity")
     st.markdown("---")
     
@@ -192,7 +192,7 @@ elif st.session_state['step'] == 2:
 # ========================================================================
 elif st.session_state['step'] == 3:
     st.title("⚙️ Fábrica de Multimedia en Acción")
-    st.markdown("Los agentes están creando el material audiovisual con calidad **Industrial Realism**.")
+    st.markdown("Los agentes están creando el material audiovisual con calidad **cinematográfica profesional**.")
     
     scenes = st.session_state['script_data'].get('scenes', [])
     
@@ -240,7 +240,7 @@ elif st.session_state['step'] == 3:
 
                 # 2️⃣ GENERAR IMAGEN (Together AI / Flux-Schnell)
                 with col_visual:
-                    st.markdown("**🎨 Renderizando Imagen (Flux Industrial)...**")
+                    st.markdown("**🎨 Renderizando Imagen (Flux-Schnell Ultra HD)...**")
                     img_file = f"scene_{scene_num}.png"
                     img_path = visual_agent.generate_image(scene['visual_prompt'], img_file)
                     
@@ -364,7 +364,7 @@ elif st.session_state['step'] == 4:
             st.download_button(
                 label="⬇️ DESCARGAR VIDEO MP4",
                 data=file,
-                file_name="video_quantum_clic_industrial.mp4",
+                file_name="video_quantum_clic.mp4",
                 mime="video/mp4",
                 use_container_width=True
             )

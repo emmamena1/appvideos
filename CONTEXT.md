@@ -1,4 +1,4 @@
-# CONTEXT.md - Industrial Video Factory v2
+# CONTEXT.md - Video Factory AI
 
 **INSTRUCCIONES PARA ANTIGRAVITY:** Lee estos archivos antes de responder cualquier pregunta sobre este proyecto.
 
@@ -23,7 +23,7 @@
 
 ---
 
-## 🎯 PROYECTO: Industrial Video Factory v2
+## 🎯 PROYECTO: Video Factory AI
 
 ### Stack Tecnológico:
 - **Frontend:** Streamlit
@@ -34,7 +34,7 @@
 
 ### Metodología: Quantum Clic
 1. **Ads Expansive:** Hook de 3 pasos (Dolor → Consecuencia → Intriga)
-2. **Mockups:** Estilo "Industrial Realism" (50mm f/2.8, textura visible)
+2. **Mockups:** Estilo "Cinematic Pro" (Adaptable al contexto)
 3. **TSL:** CTA orgánica (nunca agresiva)
 
 ### Arquitectura de Agentes:
@@ -42,7 +42,7 @@
 agents/
 ├── scriptwriter.py        (Gemini - Ads Expansive)
 ├── audio_generator.py     (Edge TTS Hardened - Reintentos)
-├── visual_generator.py    (Flux - Industrial Realism)
+├── visual_generator.py    (Flux - Adaptable Style)
 └── video_editor.py        (MoviePy - Ensamblaje)
 
 app.py                     (Orquestador - 4 fases)
@@ -105,7 +105,7 @@ appvideos/
 ├── agents/
 │   ├── scriptwriter.py               (Hook Ads Expansive)
 │   ├── audio_generator.py            (Edge TTS Gratis)
-│   ├── visual_generator.py           (Flux Industrial)
+│   ├── visual_generator.py           (Flux - Ultra HD)
 │   └── video_editor.py               (MoviePy - Ken Burns + Hormozi)
 ├── assets/
 │   ├── audio/                        (archivos .mp3)
@@ -176,7 +176,7 @@ Y estaré listo para ayudarte con contexto completo de:
 
 - ✅ Gemini 2.0 Flash migrado y funcionando
 - ✅ Edge TTS Hardened configurado (Audio TTS Gratis + Anti-403)
-- ✅ Together AI Flux configurado (imágenes industriales)
+- ✅ Together AI Flux configurado (imágenes cinematográficas)
 - ✅ App con 4 fases implementadas
 - ✅ **Fase 4 (Ensamblaje) COMPLETA:**
   - VideoEditorAgent con MoviePy 1.0.3
@@ -202,5 +202,5 @@ Y estaré listo para ayudarte con contexto completo de:
 
 **Última actualización:** 2026-01-07  
 **Versión:** 2.0 (Fase 4 Completa)  
-**Proyecto:** Industrial Video Factory v2 (Quantum Clic)
+**Proyecto:** Video Factory AI (Quantum Clic)
 **Estado:** ✅ SISTEMA COMPLETO - Listo para Producción
