@@ -1,0 +1,31 @@
+# requirements.txt - VERSIONES BLOQUEADAS (NO MODIFICAR)
+# Generado: 2026-01-06
+# ================================================
+# REGLA: NUNCA actualizar moviepy a versión 2.x
+# ================================================
+
+# Core Video Processing (CRÍTICO - versiones exactas)
+moviepy==1.0.3
+decorator==4.4.2
+
+# Image I/O
+imageio==2.37.2
+imageio-ffmpeg==0.6.0
+pillow>=10.0.0  # Requiere parche ANTIALIAS en código
+
+# Web Framework
+streamlit>=1.52.0
+
+# AI Services (ACTUALIZADO: 2026-01-06)
+google-genai>=1.56.0  # Nuevo SDK activamente mantenido
+deepgram-sdk>=5.0.0   # Deepgram Aura TTS
+together>=1.2.0       # Together AI para Flux-Schnell
+
+# Audio
+pydub>=0.25.0
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.28.0
+tqdm>=4.60.0
+proglog>=0.1.10

@@ -1,0 +1,32 @@
+C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\core\pydantic_utilities.py:13: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.datetime_parse import parse_date as parse_date
+Traceback (most recent call last):
+  File "C:\Users\Emmanuel\Desktop\appvideos\debug_dg.py", line 42, in <module>
+    for chunk in response:
+                 ^^^^^^^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\speak\v1\audio\client.py", line 101, in generate
+    with self._raw_client.generate(
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        text=text,
+        ^^^^^^^^^^
+    ...<9 lines>...
+        request_options=request_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as r:
+    ^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\speak\v1\audio\raw_client.py", line 136, in generate
+    yield _stream()
+          ~~~~~~~^^
+  File "C:\Users\Emmanuel\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\deepgram\speak\v1\audio\raw_client.py", line 119, in _stream
+    raise BadRequestError(
+    ...<8 lines>...
+    )
+deepgram.errors.bad_request_error.BadRequestError: headers: {'content-type': 'application/json', 'dg-error': 'No such model/version combination found.', 'dg-project-id': '2889d7c8-e167-4c62-848f-13fa49ee6447', 'vary': 'origin, access-control-request-method, access-control-request-headers, accept-encoding', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'dg-model-name,dg-model-uuid,dg-char-count,dg-request-id,dg-project-id,dg-error', 'dg-request-id': '17a21eac-90ef-491b-824b-53f97f240fef', 'content-length': '131', 'date': 'Wed, 07 Jan 2026 06:16:17 GMT'}, status_code: 400, body: {'err_code': 'Bad Request', 'err_msg': 'No such model/version combination found.', 'request_id': '17a21eac-90ef-491b-824b-53f97f240fef'}
+Key found: 54d42...
+Calling generate...
+Response type: <class 'generator'>
+Response dir: ['__class__', '__class_getitem__', '__del__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__lt__', '__name__', '__ne__', '__new__', '__next__', '__qualname__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'close', 'gi_code', 'gi_frame', 'gi_running', 'gi_suspended', 'gi_yieldfrom', 'send', 'throw']
+Iterating response...
+Error: headers: {'content-type': 'application/json', 'dg-error': 'No such model/version combination found.', 'dg-project-id': '2889d7c8-e167-4c62-848f-13fa49ee6447', 'vary': 'origin, access-control-request-method, access-control-request-headers, accept-encoding', 'access-control-allow-credentials': 'true', 'access-control-expose-headers': 'dg-model-name,dg-model-uuid,dg-char-count,dg-request-id,dg-project-id,dg-error', 'dg-request-id': '17a21eac-90ef-491b-824b-53f97f240fef', 'content-length': '131', 'date': 'Wed, 07 Jan 2026 06:16:17 GMT'}, status_code: 400, body: {'err_code': 'Bad Request', 'err_msg': 'No such model/version combination found.', 'request_id': '17a21eac-90ef-491b-824b-53f97f240fef'}

@@ -1,0 +1,186 @@
+"""
+YouTube Scraper Utility
+
+Scrapes YouTube channels and videos using scrapetube and youtube-transcript-api.
+"""
+
+import json
+from typing import Dict, Any, List, Optional
+from urllib.parse import urlparse, parse_qs
+import scrapetube
+from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
+import google.generativeai as genai
+from config.settings import GEMINI_API_KEY, GEMINI_MODEL
+from config.prompts import YOUTUBE_ANALYSIS_PROMPT
+
+
+class YouTubeScraper:
+    """Scraper for YouTube channels and videos."""
+    
+    def __init__(self):
+        """Initialize YouTube scraper."""
+        if GEMINI_API_KEY:
+            genai.configure(api_key=GEMINI_API_KEY)
+            self.model = genai.GenerativeModel(GEMINI_MODEL)
+        else:
+            self.model = None
+    
+    def extract_channel_id(self, channel_url: str) -> Optional[str]:
+        """Extract channel ID from URL."""
+        try:
+            # Handle different URL formats
+            if "/channel/" in channel_url:
+                return channel_url.split("/channel/")[-1].split("/")[0].split("?")[0]
+            elif "/c/" in channel_url or "/user/" in channel_url or "/@" in channel_url:
+                # For custom URLs, we need to use scrapetube which handles this
+                return None  # scrapetube will handle it
+            elif "youtube.com" in channel_url:
+                # Try to parse as channel URL
+                parsed = urlparse(channel_url)
+                if parsed.path.startswith("/c/") or parsed.path.startswith("/user/") or parsed.path.startswith("/@"):
+                    return None
+            return None
+        except Exception:
+            return None
+    
+    def scrape_channel(self, channel_url: str, max_videos: int = 10) -> Dict[str, Any]:
+        """
+        Scrape channel videos.
+        
+        Args:
+            channel_url: YouTube channel URL
+            max_videos: Maximum number of videos to scrape
+        
+        Returns:
+            Dictionary with channel data and videos
+        """
+        try:
+            channel_id = self.extract_channel_id(channel_url)
+            
+            # Get videos
+            videos = []
+            video_count = 0
+            
+            if channel_id:
+                video_generator = scrapetube.get_channel(channel_id)
+            else:
+                # For custom URLs, try to use the URL directly
+                video_generator = scrapetube.get_channel(channel_url)
+            
+            for video in video_generator:
+                if video_count >= max_videos:
+                    break
+                
+                video_id = video.get("videoId")
+                if not video_id:
+                    continue
+                
+                video_data = {
+                    "video_id": video_id,
+                    "title": video.get("title", {}).get("runs", [{}])[0].get("text", ""),
+                    "url": f"https://www.youtube.com/watch?v={video_id}",
+                    "view_count": video.get("viewCountText", {}).get("simpleText", ""),
+                    "published_time": video.get("publishedTimeText", {}).get("simpleText", ""),
+                    "length": video.get("lengthText", {}).get("simpleText", ""),
+                }
+                
+                # Try to get transcript
+                try:
+                    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['es', 'en'])
+                    video_data["transcript"] = " ".join([item["text"] for item in transcript])
+                except (TranscriptsDisabled, NoTranscriptFound):
+                    video_data["transcript"] = None
+                
+                videos.append(video_data)
+                video_count += 1
+            
+            # Extract channel name
+            channel_name = None
+            if videos:
+                # Try to get channel name from first video
+                try:
+                    first_video_gen = scrapetube.get_channel(channel_id if channel_id else channel_url)
+                    first_video = next(first_video_gen)
+                    channel_name = first_video.get("channelName", "")
+                except:
+                    pass
+            
+            return {
+                "channel_url": channel_url,
+                "channel_id": channel_id,
+                "channel_name": channel_name,
+                "videos": videos,
+                "video_count": len(videos)
+            }
+        
+        except Exception as e:
+            raise Exception(f"Error scraping channel: {str(e)}") from e
+    
+    def analyze_channel(self, channel_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Analyze channel data with Gemini AI.
+        
+        Args:
+            channel_data: Channel data from scrape_channel
+        
+        Returns:
+            Dictionary with analysis and insights
+        """
+        if not self.model:
+            return {
+                "successful_topics": [],
+                "content_patterns": [],
+                "trends": [],
+                "video_suggestions": [],
+                "insights": "Gemini API key not configured"
+            }
+        
+        try:
+            # Prepare videos data
+            videos_data = []
+            for video in channel_data.get("videos", [])[:10]:
+                videos_data.append({
+                    "title": video.get("title", ""),
+                    "view_count": video.get("view_count", ""),
+                    "transcript": video.get("transcript", "")[:500] if video.get("transcript") else ""
+                })
+            
+            videos_json = json.dumps(videos_data, indent=2)
+            
+            # Build prompt
+            prompt = YOUTUBE_ANALYSIS_PROMPT.format(videos_data=videos_json)
+            
+            # Generate analysis
+            response = self.model.generate_content(prompt)
+            analysis_text = response.text
+            
+            # Parse JSON response
+            try:
+                analysis = json.loads(analysis_text)
+            except json.JSONDecodeError:
+                # Try to extract JSON from markdown
+                if "```json" in analysis_text:
+                    analysis_text = analysis_text.split("```json")[1].split("```")[0]
+                    analysis = json.loads(analysis_text)
+                else:
+                    # Return basic analysis
+                    analysis = {
+                        "successful_topics": [],
+                        "content_patterns": [],
+                        "trends": [],
+                        "video_suggestions": [],
+                        "insights": analysis_text
+                    }
+            
+            return analysis
+        
+        except Exception as e:
+            # Return basic analysis on error
+            return {
+                "successful_topics": [],
+                "content_patterns": [],
+                "trends": [],
+                "video_suggestions": [],
+                "insights": f"Error analyzing channel: {str(e)}"
+            }

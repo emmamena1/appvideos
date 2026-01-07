@@ -1,0 +1,73 @@
+# agents/code_doctor.py
+import os
+import shutil
+import google.generativeai as genai
+from config import settings
+
+class CodeDoctorAgent:
+    def __init__(self):
+        try:
+            genai.configure(api_key=settings.GEMINI_API_KEY)
+            self.model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            print("🚑 Code Doctor (MEGA PROMPT ACTIVADO) en línea.")
+        except:
+            print("⚠️ Code Doctor no pudo conectar con Gemini.")
+
+    def heal(self, file_path, error_trace):
+        print(f"🔥 ANTIGRAVITY: INTERVINIENDO EN {file_path}")
+        
+        # 1. Backup
+        try:
+            shutil.copy(file_path, file_path + ".bak")
+        except:
+            pass
+
+        # 2. Leer código roto
+        with open(file_path, "r", encoding="utf-8") as f:
+            code = f.read()
+
+        # 3. MEGA PROMPT (ORDEN EJECUTIVA)
+        prompt = f"""
+        ACT AS A WORLD-CLASS PYTHON EXPERT SPECIALIZING IN MOVIEPY AND FFMPEG.
+        
+        CRITICAL SITUATION:
+        The user is getting an 'IndexError' or 'OSError' related to time/frames in MoviePy.
+        Example: "Accessing time t=5.12 seconds, with clip duration=5 seconds".
+        
+        THE CAUSE:
+        MoviePy crashes if you try to render a frame/subtitle even 0.0001s after the audio/video ends. Floating point rounding errors often cause this.
+        
+        THE TASK:
+        Rewrite the provided code to be MATHEMATICALLY INVINCIBLE against timing errors.
+        
+        MANDATORY FIXES TO IMPLEMENT:
+        1. CLAMPING: Ensure 'end_time' is ALWAYS strictly less than 'total_duration' (e.g., duration - 0.1s).
+        2. DURATION LOCK: Use .set_duration(audio.duration) on final clips.
+        3. SUBCLIP: Use .subclip(0, audio.duration) to enforce limits.
+        4. COMPATIBILITY: Keep 'from moviepy.editor import *' (Version 1.0.3).
+        5. PILLOW PATCH: Keep the ANTIALIAS patch if present.
+        
+        ERROR TRACEBACK:
+        {error_trace}
+        
+        THE BROKEN FILE:
+        ```python
+        {code}
+        ```
+        
+        OUTPUT:
+        RETURN ONLY THE FULLY CORRECTED PYTHON CODE. NO MARKDOWN. NO COMMENTS. JUST CODE.
+        """
+        
+        try:
+            response = self.model.generate_content(prompt)
+            fixed_code = response.text.replace("```python", "").replace("```", "").strip()
+            
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(fixed_code)
+            
+            print("✅ ¡CÓDIGO REPARADO CON LÓGICA BLINDADA!")
+            return True
+        except Exception as e:
+            print(f"💀 El Doctor falló: {e}")
+            return False

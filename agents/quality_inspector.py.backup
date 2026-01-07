@@ -1,0 +1,159 @@
+"""
+Quality Inspector Agent (Agent 5)
+
+Reviews generated images using Google Gemini Vision API to ensure quality and compliance.
+"""
+
+import json
+from pathlib import Path
+from typing import Dict, Any, List
+import google.generativeai as genai
+from PIL import Image
+from agents import BaseAgent
+from config.settings import GEMINI_API_KEY, GEMINI_VISION_MODEL, MIN_QUALITY_SCORE
+from config.prompts import QUALITY_INSPECTOR_SYSTEM_PROMPT, QUALITY_INSPECTOR_USER_PROMPT
+
+
+class QualityInspectorAgent(BaseAgent):
+    """Agent that reviews generated images for quality."""
+    
+    def __init__(self):
+        """Initialize Quality Inspector agent."""
+        super().__init__("quality_inspector")
+        
+        if not GEMINI_API_KEY:
+            raise ValueError("GEMINI_API_KEY not configured")
+        
+        genai.configure(api_key=GEMINI_API_KEY)
+        self.model = genai.GenerativeModel(GEMINI_VISION_MODEL)
+    
+    def process(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Review generated images for quality.
+        
+        Args:
+            input_data: Dictionary with keys:
+                - generated_images: List of generated image dictionaries
+                - production_plan: Original production plan
+        
+        Returns:
+            Dictionary with quality report and regeneration decisions
+        """
+        self.validate_input(input_data, ["generated_images", "production_plan"])
+        
+        generated_images = input_data["generated_images"]
+        production_plan = input_data["production_plan"]
+        
+        # Filter to only successful images
+        successful_images = [img for img in generated_images if img.get("status") == "success"]
+        
+        if not successful_images:
+            raise ValueError("No successful images to review")
+        
+        self.logger.info(f"Reviewing {len(successful_images)} images...")
+        
+        # Prepare images for review
+        images_to_review = []
+        for img_data in successful_images:
+            image_path = Path(img_data["image_path"])
+            if image_path.exists():
+                images_to_review.append({
+                    "path": image_path,
+                    "scene_number": img_data["scene_number"],
+                    "prompt": img_data["prompt"]
+                })
+        
+        # Convert production plan to JSON
+        plan_json = json.dumps(production_plan, indent=2)
+        
+        # Build prompt
+        prompt = QUALITY_INSPECTOR_USER_PROMPT.format(
+            production_plan=plan_json,
+            image_count=len(images_to_review)
+        )
+        
+        # Prepare image parts for Gemini
+        image_parts = []
+        for img_info in images_to_review:
+            img = Image.open(img_info["path"])
+            image_parts.append({
+                "mime_type": "image/png",
+                "data": img
+            })
+        
+        try:
+            # Generate quality assessment
+            response = self.model.generate_content(
+                [QUALITY_INSPECTOR_SYSTEM_PROMPT + "\n\n" + prompt] + image_parts
+            )
+            
+            assessment_text = response.text
+            
+            # Parse JSON response
+            assessment = self.safe_json_parse(assessment_text)
+            
+            # Validate structure
+            if "images" not in assessment:
+                raise ValueError("Assessment must contain 'images' array")
+            
+            # Map assessment to images
+            images_need_regeneration = []
+            quality_scores = []
+            
+            for i, img_info in enumerate(images_to_review):
+                scene_number = img_info["scene_number"]
+                
+                # Find corresponding assessment
+                img_assessment = None
+                for assessment_item in assessment["images"]:
+                    if assessment_item.get("image_number") == scene_number:
+                        img_assessment = assessment_item
+                        break
+                
+                if not img_assessment and i < len(assessment["images"]):
+                    img_assessment = assessment["images"][i]
+                
+                if img_assessment:
+                    score = img_assessment.get("score", 5.0)
+                    needs_regeneration = img_assessment.get("needs_regeneration", score < MIN_QUALITY_SCORE)
+                    
+                    quality_scores.append(score)
+                    
+                    if needs_regeneration:
+                        images_need_regeneration.append({
+                            "scene_number": scene_number,
+                            "image_path": str(img_info["path"]),
+                            "score": score,
+                            "issues": img_assessment.get("issues", []),
+                            "improvements": img_assessment.get("improvements", "")
+                        })
+            
+            overall_score = assessment.get("overall_quality", sum(quality_scores) / len(quality_scores) if quality_scores else 0)
+            
+            self.logger.info(
+                f"Quality assessment complete. "
+                f"Overall score: {overall_score:.1f}/10, "
+                f"{len(images_need_regeneration)} images need regeneration"
+            )
+            
+            return {
+                "quality_report": assessment,
+                "overall_score": overall_score,
+                "images_need_regeneration": images_need_regeneration,
+                "all_images_approved": len(images_need_regeneration) == 0,
+                "generated_images": generated_images,
+                "production_plan": production_plan
+            }
+        
+        except Exception as e:
+            self.logger.error(f"Error reviewing images: {str(e)}")
+            # If review fails, approve all images (fail-safe)
+            self.logger.warning("Quality review failed, approving all images")
+            return {
+                "quality_report": {"summary": "Review failed, images approved"},
+                "overall_score": 7.0,
+                "images_need_regeneration": [],
+                "all_images_approved": True,
+                "generated_images": generated_images,
+                "production_plan": production_plan
+            }
