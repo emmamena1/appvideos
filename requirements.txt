@@ -18,7 +18,7 @@ streamlit>=1.52.0
 
 # AI Services (ACTUALIZADO: 2026-01-06)
 google-genai>=1.56.0  # Nuevo SDK activamente mantenido
-deepgram-sdk>=5.0.0   # Deepgram Aura TTS
+edge-tts>=6.1.9       # Microsoft Edge TTS (Gratis)
 together>=1.2.0       # Together AI para Flux-Schnell
 
 # Audio

@@ -49,10 +49,7 @@ with st.sidebar:
     else:
         st.error("🧠 Brain (Gemini): OFFLINE")
     
-    if "DEEPGRAM_API_KEY" in st.secrets:
-        st.success("🔊 Voice (Deepgram Aura): ONLINE")
-    else:
-        st.error("🔊 Voice (Deepgram): OFFLINE")
+    st.success("🔊 Voice (Edge TTS): ONLINE (Gratis)")
     
     if "TOGETHER_API_KEY" in st.secrets:
         st.success("👁️ Visuals (Flux-Schnell): ONLINE")

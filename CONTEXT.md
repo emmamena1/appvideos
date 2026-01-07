@@ -28,7 +28,7 @@
 ### Stack Tecnológico:
 - **Frontend:** Streamlit
 - **Cerebro:** Gemini 2.0 Flash (google-genai SDK v1.56.0)
-- **Voz:** Deepgram Aura-2 (aura-celeste-es con fallback a aura-asteria-en)
+- **Voz:** Edge TTS (Gratis, es-MX-DaliaNeural por defecto)
 - **Visual:** Together AI Flux-Schnell (1024x1792, 9:16)
 - **Video:** MoviePy 1.0.3 (NUNCA actualizar a 2.x)
 
