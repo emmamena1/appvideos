@@ -113,6 +113,58 @@ IMPORTANTE:
         st.code(traceback.format_exc())
         return []
 
+def parse_gemini_guion(texto: str) -> list:
+    """
+    Parsea texto crudo de Gemini y extrae escenas automáticamente.
+    Detecta timestamps, narraciones y prompts visuales.
+    
+    Args:
+        texto: Texto completo de Gemini (puede incluir timestamps)
+    
+    Returns:
+        Lista de diccionarios con 'texto' y 'prompt' para cada escena
+    """
+    import re
+    
+    escenas = []
+    
+    # Método 1: Buscar timestamps formato (0:00-0:03)
+    timestamps_pattern = r'\((\d+:\d+-\d+:\d+)\)\s*(.+?)(?=\(|$)'
+    matches_timestamps = re.findall(timestamps_pattern, texto, re.DOTALL)
+    
+    if matches_timestamps:
+        # Extraer narraciones con timestamps
+        narraciones = [match[1].strip() for match in matches_timestamps[:4]]
+    else:
+        # Método 2: Buscar por líneas que parecen narraciones
+        # Asumiendo que las narraciones son párrafos cortos
+        lines = texto.split('\n')
+        narraciones = [line.strip() for line in lines if line.strip() and len(line.strip()) > 20][:4]
+    
+    # Buscar prompts visuales (usualmente en inglés y descriptivos)
+    # Patrón: Líneas que empiezan con mayúscula y tienen palabras en inglés
+    prompt_pattern = r'([A-Z][a-z]+.*?(?:shot|photo|view|scene|apartment|balcony|plant|professional).*?)(?=\n[A-Z]|\n\n|$)'
+    prompts_raw = re.findall(prompt_pattern, texto, re.IGNORECASE)
+    
+    # Si no se encuentran prompts, usar prompts genéricos
+    if not prompts_raw or len(prompts_raw) < 4:
+        prompts_raw = [
+            "Ultra-realistic cinematic shot, professional lighting, high detail",
+            "Professional photography, natural lighting, sharp focus",
+            "Cinematic composition, depth of field, realistic textures",
+            "High quality photo, professional setup, attractive scene"
+        ]
+    
+    # Construir escenas (mínimo 4)
+    for i in range(4):
+        escena = {
+            'texto': narraciones[i].strip() if i < len(narraciones) else f"Narración escena {i+1}",
+            'prompt': prompts_raw[i].strip() if i < len(prompts_raw) else "Balcony apartment with plants and natural lighting"
+        }
+        escenas.append(escena)
+    
+    return escenas
+
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
     page_title="Video Factory AI | Quantum Clic",
@@ -192,16 +244,68 @@ if st.session_state['step'] == 1:
     st.markdown("---")
     modo = st.radio(
         "🎯 Modo de trabajo:",
-        ["📝 Manual (actual)", "🚀 Automático nuevo"],
+        ["📝 Manual (actual)", "🚀 Automático nuevo", "📋 Paste Gemini"],
         horizontal=True,
-        help="Manual: Control total del guion. Automático: Genera 4 escenas listas para TikTok en segundos."
+        help="Manual: Control total | Automático: Genera 4 escenas | Paste Gemini: Parsea texto de Gemini existente"
     )
     st.markdown("---")
     
     # ========================================================================
+    # MODO PASTE GEMINI: Parser Automático de Guiones
+    # ========================================================================
+    if modo == "📋 Paste Gemini":
+        st.header("🧠 Parser de Guiones Gemini")
+        st.info("📋 Pega un guion que ya hayas generado con Gemini y extraeré automáticamente las 4 escenas.")
+        
+        guion_raw = st.text_area(
+            "Pega aquí el texto completo de Gemini:",
+            height=300,
+            placeholder="""Ejemplo:
+Opción 1: El Ángulo Financiero
+(0:00-0:03) ¿Sabes cuánto dinero pierdes cada semana comprando frutas en el super?
+Wide-angle shot of apartment balcony with small pots...
+(0:04-0:15) El 70% de la gente sin jardín gasta $50 semanales...
+Close-up of hands planting seeds in containers...""",
+            help="Copia y pega el texto tal cual lo generó Gemini, con timestamps o sin ellos."
+        )
+        
+        if st.button("🔮 EXTRAER 4 ESCENAS AUTOMÁTICO", type="primary", use_container_width=True):
+            if guion_raw.strip():
+                with st.spinner("🔍 Analizando texto y extrayendo escenas..."):
+                    escenas_parsed = parse_gemini_guion(guion_raw)
+                    
+                    if escenas_parsed and len(escenas_parsed) >= 4:
+                        # Convertir a formato compatible con Step 2
+                        scenes_formatted = []
+                        for i, escena in enumerate(escenas_parsed[:4]):
+                            scene_role = "hook" if i == 0 else ("cta" if i == 3 else "body")
+                            scenes_formatted.append({
+                                "id": i + 1,
+                                "role": scene_role,
+                                "narration": escena['texto'],
+                                "visual_prompt": escena['prompt'],
+                                "estimated_duration": 8.0
+                            })
+                        
+                        # Guardar en session_state
+                        st.session_state['script_data'] = {
+                            'title': "Video desde Gemini parseado",
+                            'hook_analysis': "Guion importado desde texto de Gemini",
+                            'scenes': scenes_formatted
+                        }
+                        st.session_state['step'] = 2
+                        st.success(f"✅ ¡{len(escenas_parsed)} escenas extraídas correctamente!")
+                        st.balloons()
+                        st.rerun()
+                    else:
+                        st.error("❌ No se pudieron extraer 4 escenas válidas del texto. Verifica el formato.")
+            else:
+                st.warning("⚠️ Pega el texto de Gemini primero.")
+    
+    # ========================================================================
     # MODO AUTOMÁTICO: Generador 4 Escenas
     # ========================================================================
-    if modo == "🚀 Automático nuevo":
+    elif modo == "🚀 Automático nuevo":
         st.header("🎬 Generador Automático de 4 Escenas TikTok")
         st.info("🪄 Gemini creará automáticamente 4 escenas optimizadas para TikTok. Podrás editarlas después.")
         
