@@ -183,6 +183,11 @@ Y estaré listo para ayudarte con contexto completo de:
 - ✅ **Fase 1 (Input) MEJORADA:**
   - Sistema de Plantillas Pre-configuradas (Marketing, Fitness, etc.)
   - Input manual flexible
+  - 🆕 **MODO AUTOMÁTICO**: Generador de 4 escenas TikTok con Gemini
+    - Radio button para alternar Manual/Automático
+    - Inputs simplificados (tema, producto, hook)
+    - Genera 4 escenas optimizadas al instante
+    - Escenas editables en Fase 2
 - ✅ **Fase 3.5 (Asset Review) COMPLETA:**
   - Regeneración selectiva de imágenes (Flux)
   - Regeneración selectiva de audio (Edge TTS)
@@ -210,6 +215,6 @@ Y estaré listo para ayudarte con contexto completo de:
 ---
 
 **Última actualización:** 2026-01-08  
-**Versión:** 2.1 (Generalización + Asset Review)  
+**Versión:** 2.2 (Auto-Generation Mode + Asset Review)  
 **Proyecto:** Video Factory AI (Quantum Clic)
 **Estado:** ✅ SISTEMA COMPLETO - Listo para Producción
