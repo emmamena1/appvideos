@@ -179,6 +179,9 @@ Y estaré listo para ayudarte con contexto completo de:
 - ✅ Gemini 2.0 Flash migrado y funcionando
 - ✅ Edge TTS Hardened configurado (Audio TTS Gratis + Anti-403)
 - ✅ Together AI Flux configurado (imágenes cinematográficas)
+- ✅ **Dependencias actualizadas**:
+  - google-genai v1.57.0 (SDK oficial de Gemini)
+  - moviepy v1.0.3 (ensamblaje de videos)
 - ✅ App con 4 fases implementadas
 - ✅ **Fase 1 (Input) MEJORADA:**
   - Sistema de Plantillas Pre-configuradas (Marketing, Fitness, etc.)
@@ -188,16 +191,26 @@ Y estaré listo para ayudarte con contexto completo de:
     - Inputs simplificados (tema, producto, hook)
     - Genera 4 escenas optimizadas al instante
     - Escenas editables en Fase 2
-    - 🔥 **SISTEMA MULTI-PRODUCTO**:
-      - 3 productos incluidos: Frutíferas en Macetas, Marketing Digital Pro, Fitness en Casa
-      - Cada producto con template único, hooks específicos, precio y bonos
-      - Selector de producto en UI Modo Automático
-      - Templates dinámicos: "Manual $7", "Curso $27", "Programa $17"
-      - Hooks inteligentes por producto:
+    - 🔥 **SISTEMA MULTI-PRODUCTO v2.5** (PROBADO Y VALIDADO):
+      - ✅ **3 productos incluidos**:
+        * 🍊 Frutíferas en Macetas ($7, 4 bonos)
+        * 💼 Marketing Digital Pro ($27, 5 bonos)
+        * 💪 Fitness en Casa ($17, 3 bonos)
+      - ✅ Selector de producto en UI Modo Automático
+      - ✅ Cada producto con template único, hooks específicos, precio y bonos
+      - ✅ Templates dinámicos inyectados en prompts de Gemini
+      - ✅ Hooks inteligentes por producto:
         * Frutíferas: Drenaje, Dinero, Espacio, Tiempo
         * Marketing: CTR, ROI, Audiencia, Escalamiento  
         * Fitness: Tiempo, Sin Gym, Grasa, Sostenible
-      - CTAs 100% on-brand por producto
+      - ✅ CTAs 100% on-brand por producto
+      - ✅ Auto-completado de precio según producto seleccionado
+      - ✅ **TEST EXITOSO** (2026-01-09):
+        - Producto: Frutíferas en Macetas con hook "Drenaje"
+        - Resultado: 4 escenas generadas correctamente
+        - Validado: Capítulo 3 mencionado, CTA exacto "$7 + 4 bonos"
+        - Prompts: Todos en inglés con estilo cinematográfico
+      - ✅ Escalable: agregar productos = editar diccionario (5 min)
   - 🆕 **MODO PASTE GEMINI**: Parser de guiones existentes
     - Pega texto de Gemini generado externamente
     - Extracción automática con regex (timestamps + prompts)
