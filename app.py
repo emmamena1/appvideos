@@ -12,8 +12,14 @@ from agents.audio_generator import AudioGeneratorAgent
 from agents.visual_generator import VisualGeneratorAgent
 from agents.video_editor import VideoEditorAgent  # NUEVO AGENTE - Fase 4
 
-# --- PLANTILLA DE PRODUCTO: "El Secreto de las Frutíferas en Macetas" ---
-PRODUCTO_TEMPLATE = """
+
+# --- SISTEMA MULTI-PRODUCTO ---
+# Cada producto tiene su propio template, hooks, precio y bonos
+
+PRODUCTOS_DISPONIBLES = {
+    "🍊 Frutíferas en Macetas": {
+        "nombre": "El Secreto de las Frutíferas en Macetas",
+        "template": """
 📚 MANUAL: 'El Secreto de las Frutíferas en Macetas' - 13 CAPÍTULOS
 
 🎯 PROBLEMAS QUE RESUELVE (Por Capítulo):
@@ -39,15 +45,96 @@ Precio promocional: $7 USD
 📖 ESTRUCTURA DEL MANUAL:
 Los 13 capítulos cubren desde selección de macetas hasta cosecha completa.
 Cada capítulo tiene soluciones paso a paso probadas.
-"""
+""",
+        "hooks": {
+            "Drenaje": "Capítulo 3 (Drenaje perfecto - 90% de fallos)",
+            "Dinero": "Ahorro vs supermercado (ROI en 90 días)",
+            "Espacio": "Capítulo 6 (Cítricos enanos para departamentos)",
+            "Tiempo": "Capítulo 11 (Calendario de riego automático 90 días)"
+        },
+        "precio": "$7",
+        "bonos": 4
+    },
+    
+    "💼 Marketing Digital Pro": {
+        "nombre": "Curso Completo de Marketing Digital",
+        "template": """
+📚 CURSO: 'Marketing Digital desde Cero' - 8 MÓDULOS
 
-# Mapeo inteligente de hook a capítulo específico
-HOOK_TO_CHAPTER = {
-    "Drenaje": "Capítulo 3 (Drenaje perfecto - 90% de fallos)",
-    "Dinero": "Ahorro vs supermercado (ROI en 90 días)",
-    "Espacio": "Capítulo 6 (Cítricos enanos para departamentos)",
-    "Tiempo": "Capítulo 11 (Calendario de riego automático 90 días)"
+🎯 PROBLEMAS QUE RESUELVE (Por Módulo):
+• Módulo 2: Targeting avanzado (encuentra tu audiencia exacta)
+• Módulo 3: CTR bajo en anuncios (mejora clicks 300%)
+• Módulo 5: ROI negativo (convierte en positivo en 30 días)
+• Módulo 6: Copy que no vende (fórmulas probadas)
+• Módulo 8: Escalamiento sostenible
+
+💰 OFERTA EXACTA:
+Precio original: $297
+Precio promocional: $27 USD
+
+🎁 5 BONOS INCLUIDOS:
+1. Templates de anuncios (valor $97)
+2. Script de ventas VSL (valor $147)
+3. Calculadora de ROI (valor $47)
+4. Acceso comunidad privada (valor $197/mes)
+5. Sesión 1-a-1 estrategia (valor $497)
+
+🔥 CTA SIEMPRE:
+"Curso completo $27 + 5 bonos - Link en bio"
+
+📖 ESTRUCTURA DEL CURSO:
+8 módulos con +50 lecciones en video sobre ads, funnels, copy y escalamiento.
+""",
+        "hooks": {
+            "CTR": "Módulo 3 (Optimización de CTR - +300% clicks)",
+            "ROI": "Módulo 5 (ROI positivo en 30 días)",
+            "Audiencia": "Módulo 2 (Targeting avanzado FB/IG)",
+            "Escalamiento": "Módulo 8 (Escala de $100 a $10K/día)"
+        },
+        "precio": "$27",
+        "bonos": 5
+    },
+    
+    "💪 Fitness en Casa": {
+        "nombre": "Transformación Fitness 90 Días",
+        "template": """
+📚 PROGRAMA: 'Transformación Fitness 90 Días' - SIN GIMNASIO
+
+🎯 PROBLEMAS QUE RESUELVE:
+• Semana 1-2: Rutinas sin equipo (resultados visibles en 14 días)
+• Semana 3-4: Plan nutricional simple (sin dietas extremas)
+• Semana 5-8: Quema grasa localizada (abdomen, brazos, piernas)
+• Semana 9-12: Mantenimiento sostenible (resultados permanentes)
+
+💰 OFERTA EXACTA:
+Precio original: $97
+Precio promocional: $17 USD
+
+🎁 3 BONOS INCLUIDOS:
+1. 50 recetas fitness (valor $27)
+2. Tracker de progreso app (valor $47)
+3. Grupo WhatsApp soporte (valor $97/mes)
+
+🔥 CTA SIEMPRE:
+"Programa completo $17 + 3 bonos - Link en bio"
+
+📖 ESTRUCTURA:
+12 semanas de rutinas progresivas + plan nutricional + seguimiento.
+""",
+        "hooks": {
+            "Tiempo": "Resultados en 14 días (Semana 1-2)",
+            "Sin Gym": "Desde casa sin equipo (rutinas completas)",
+            "Grasa": "Quema grasa localizada (Semana 5-8)",
+            "Sostenible": "Mantenimiento permanente (Semana 9-12)"
+        },
+        "precio": "$17",
+        "bonos": 3
+    }
 }
+
+# LEGACY: Mantener compatibilidad con código existente
+PRODUCTO_TEMPLATE = PRODUCTOS_DISPONIBLES["🍊 Frutíferas en Macetas"]["template"]
+HOOK_TO_CHAPTER = PRODUCTOS_DISPONIBLES["🍊 Frutíferas en Macetas"]["hooks"]
 
 # --- FUNCIONES DE AUTO-GENERACIÓN ---
 def parse_gemini_scenes(response_text: str) -> list:
@@ -80,7 +167,7 @@ def parse_gemini_scenes(response_text: str) -> list:
     
     return escenas
 
-def generate_auto_escenas(tema: str, producto: str, hook: str) -> list:
+def generate_auto_escenas(tema: str, producto: str, hook: str, producto_config: dict = None) -> list:
     """
     Genera automáticamente 4 escenas usando Gemini para TikTok.
     
@@ -88,6 +175,7 @@ def generate_auto_escenas(tema: str, producto: str, hook: str) -> list:
         tema: El tema del video (ej: "Gente en depa sin jardín")
         producto: El producto a vender (ej: "Manual $7")
         hook: Tipo de hook (Drenaje, Dinero, Espacio)
+        producto_config: Configuración del producto (template, hooks, precio, bonos)
     
     Returns:
         Lista de diccionarios con 'texto' y 'prompt' para cada escena
@@ -101,11 +189,19 @@ def generate_auto_escenas(tema: str, producto: str, hook: str) -> list:
     
     client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
     
-    # Obtener el capítulo sugerido según el hook
-    capitulo_sugerido = HOOK_TO_CHAPTER.get(hook, "Manual completo")
+    # Si no se proporciona producto_config, usar valores legacy
+    if producto_config is None:
+        producto_config = PRODUCTOS_DISPONIBLES["🍊 Frutíferas en Macetas"]
+    
+    # Usar el template del producto seleccionado
+    template_producto = producto_config['template']
+    hooks_producto = producto_config['hooks']
+    
+    # Obtener el capítulo/módulo sugerido según el hook
+    capitulo_sugerido = hooks_producto.get(hook, "Manual completo")
     
     prompt = f"""
-{PRODUCTO_TEMPLATE}
+{template_producto}
 
 CONTEXTO DEL VIDEO:
 Tema: {tema}
@@ -117,20 +213,20 @@ Genera EXACTAMENTE 4 escenas para un video TikTok de 45 segundos total.
 
 INSTRUCCIONES (ESTRICTAS):
 - Escena 1 (0-3s): Hook POTENTE relacionado con {hook} - Menciona el DOLOR específico (MAX 12 palabras español)
-- Escena 2 (3-20s): Profundiza el PROBLEMA usando datos del manual (menciona capítulo si aplica) (MAX 15 palabras español)
-- Escena 3 (20-38s): SOLUCIÓN directa - CITA el capítulo específico del manual: "{capitulo_sugerido}" (MAX 15 palabras español)
-- Escena 4 (38-45s): CTA orgánico - USA EXACTAMENTE: "Manual $7 + 4 bonos GRATIS - Link en bio"
+- Escena 2 (3-20s): Profundiza el PROBLEMA usando datos del manual (menciona capítulo/módulo si aplica) (MAX 15 palabras español)
+- Escena 3 (20-38s): SOLUCIÓN directa - CITA el capítulo/módulo específico: "{capitulo_sugerido}" (MAX 15 palabras español)
+- Escena 4 (38-45s): CTA orgánico - USA el CTA del template del producto
 
 FORMATO DE RESPUESTA (ESTRICTO):
 ESCENA 1: [texto español MAX 12 palabras] | [prompt imagen INGLÉS cinematográfico]
 ESCENA 2: [texto español MAX 15 palabras] | [prompt imagen INGLÉS cinematográfico]
-ESCENA 3: [texto español MAX 15 palabras - MENCIONA CAPÍTULO] | [prompt imagen INGLÉS cinematográfico]
-ESCENA 4: Manual $7 + 4 bonos GRATIS - Link en bio | [prompt imagen INGLÉS call-to-action visual]
+ESCENA 3: [texto español MAX 15 palabras - MENCIONA CAPÍTULO/MÓDULO] | [prompt imagen INGLÉS cinematográfico]
+ESCENA 4: [CTA del template] | [prompt imagen INGLÉS call-to-action visual]
 
 IMPORTANTE PARA PROMPTS VISUALES:
 - TODOS los prompts deben estar en INGLÉS
 - Estilo obligatorio: "Cinematic 8K photography, depth of field, professional lighting"
-- Incluir elementos: Frutas frescas, macetas modernas, balcones/terrazas, manos plantando
+- Incluir elementos relevantes al producto
 - Composición: Ultra-realistic, natural colors, high resolution
 - Cada prompt debe ser único y específico para la escena
 """
@@ -357,6 +453,19 @@ Close-up of hands planting seeds in containers...""",
         st.header("🎬 Generador Automático de 4 Escenas TikTok")
         st.info("🪄 Gemini creará automáticamente 4 escenas optimizadas para TikTok. Podrás editarlas después.")
         
+        # 🆕 SELECTOR DE PRODUCTO
+        producto_key = st.selectbox(
+            "📦 Selecciona el Producto:",
+            list(PRODUCTOS_DISPONIBLES.keys()),
+            help="Cada producto tiene su propio template con capítulos, hooks y CTAs específicos"
+        )
+        
+        # Obtener configuración del producto seleccionado
+        producto_config = PRODUCTOS_DISPONIBLES[producto_key]
+        
+        # Mostrar info del producto seleccionado
+        st.caption(f"**{producto_config['nombre']}** | Precio: {producto_config['precio']} | {producto_config['bonos']} bonos incluidos")
+        
         col1, col2 = st.columns(2)
         
         with col1:
@@ -370,21 +479,24 @@ Close-up of hands planting seeds in containers...""",
         with col2:
             producto_auto = st.text_input(
                 "🎯 Producto/Servicio:",
-                value="Manual $7",
-                placeholder="Ej: Curso de Jardinería Vertical",
+                value=producto_config['precio'],  # Pre-llenar con precio del producto
+                placeholder=f"Ej: {producto_config['nombre'][:30]}...",
                 help="¿Qué estás vendiendo?"
             )
         
+        # Hooks dinámicos según el producto seleccionado
+        hooks_disponibles = list(producto_config['hooks'].keys())
         hook_auto = st.selectbox(
             "🎣 Tipo de Hook:",
-            ["Drenaje", "Dinero", "Espacio", "Tiempo"],
+            hooks_disponibles,
             help="El enfoque del hook para captar atención en los primeros 3 segundos"
         )
+        
         
         if st.button("🪄 AUTO-GENERAR 4 ESCENAS", type="primary", use_container_width=True):
             if tema_auto and producto_auto:
                 with st.spinner("🧠 Gemini está generando tus 4 escenas TikTok..."):
-                    escenas_auto = generate_auto_escenas(tema_auto, producto_auto, hook_auto)
+                    escenas_auto = generate_auto_escenas(tema_auto, producto_auto, hook_auto, producto_config)
                     
                     if escenas_auto and len(escenas_auto) == 4:
                         # Convertir escenas auto a formato compatible con Step 2
