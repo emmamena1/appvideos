@@ -1,27 +1,26 @@
-# agents/audio_generator.py - VERSIÓN EDGE TTS (HARDENED)
+# agents/audio_generator.py - VERSIÓN gTTS (Google Text-to-Speech)
 
 import os
 from pathlib import Path
-import edge_tts
-import asyncio
+from gtts import gTTS
 import streamlit as st
 import time
 
 class AudioGeneratorAgent:
     """
-    Genera audio GRATIS con Microsoft Edge TTS.
-    Versión reforzada con reintentos anti-403 y timeout.
+    Genera audio GRATIS con Google Text-to-Speech (gTTS).
+    Versión estable sin problemas de bloqueo.
     """
     
     def __init__(self):
         """
-        Inicializa el agente con voz en español recomendada.
-        "es-MX-DaliaNeural" - Mexicana, profesional y cálida (RECOMENDADA)
+        Inicializa el agente con configuración para español.
         """
-        self.voice = "es-MX-DaliaNeural" 
-        self.max_retries = 3  # Reintentos por fallo 403
-        self.retry_delay = 2  # Segundos entre reintentos
-        self.default_voice = self.voice # Alias para compatibilidad con app.py
+        self.lang = "es"  # Español
+        self.tld = "com.mx"  # Acento mexicano
+        self.max_retries = 3
+        self.retry_delay = 2
+        self.default_voice = "es-MX (gTTS)"  # Para compatibilidad con app.py
         
     def is_ready(self):
         """Siempre listo, no requiere API Key."""
@@ -29,7 +28,7 @@ class AudioGeneratorAgent:
     
     def generate_narration(self, text: str, filename: str) -> str:
         """
-        Genera archivo de audio .mp3 usando Edge TTS con reintentos.
+        Genera archivo de audio .mp3 usando gTTS.
         
         Args:
             text: Texto a narrar
@@ -47,74 +46,56 @@ class AudioGeneratorAgent:
             os.makedirs(output_dir, exist_ok=True)
             output_path = os.path.join(output_dir, filename)
             
-            # Cache deshabilitado - Siempre genera audios frescos
-            # if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-            #     print(f"[CACHE] Audio encontrado: {output_path}")
-            #     return output_path
-
-            print(f"[*] Generando audio: {text[:30]}...")
+            print(f"[*] Generando audio con gTTS: {text[:30]}...")
             
             # Generar con reintentos
             for attempt in range(self.max_retries):
                 try:
-                    # FIX: Usar loop existente o crear uno nuevo (compatible con Streamlit)
-                    loop = self._get_or_create_event_loop()
-                    loop.run_until_complete(self._generate_audio_async(text, output_path, self.voice))
+                    # Crear objeto gTTS
+                    tts = gTTS(
+                        text=text,
+                        lang=self.lang,
+                        tld=self.tld,
+                        slow=False
+                    )
+                    
+                    # Guardar archivo
+                    tts.save(output_path)
                     
                     # Validar
                     if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
                         print(f"[SUCCESS] Audio generado en intento {attempt+1}")
                         return output_path
                     else:
-                         print(f"[FAIL] Archivo vacío en intento {attempt+1}")
+                        print(f"[FAIL] Archivo vacío en intento {attempt+1}")
                         
                 except Exception as e:
                     print(f"[ERROR] Intento {attempt+1} falló: {e}")
                     
-                    if "403" in str(e) and attempt < self.max_retries - 1:
-                        if "streamlit" in str(type(st)): # Check si estamos en contexto streamlit
-                             st.warning(f"⚠️ Error 403 (Intento {attempt+1}/{self.max_retries}). Reintentando en {self.retry_delay}s...")
+                    if attempt < self.max_retries - 1:
+                        if "streamlit" in str(type(st)):
+                            st.warning(f"⚠️ Reintentando audio (Intento {attempt+1}/{self.max_retries})...")
                         time.sleep(self.retry_delay)
                         continue
-                    else:
-                        if attempt == self.max_retries - 1:
-                            if "streamlit" in str(type(st)):
-                                st.error("❌ No se pudo generar audio tras múltiples intentos (Posible bloqueo 403)")
-                        # Si no es recuperable o último intento, no re-anzamos inmediatamente para permitir el return None final
-                        pass
                         
-            st.error("❌ No se pudo generar audio tras múltiples intentos")
+            # Si llegamos aquí, todos los intentos fallaron
+            st.error(f"❌ No se pudo generar audio para: {text[:30]}...")
             return None
                 
         except Exception as e:
-            st.error(f"❌ Error Crítico Edge TTS: {e}")
+            st.error(f"❌ Error Crítico gTTS: {e}")
             import traceback
             traceback.print_exc()
             return None
-    
-    def _get_or_create_event_loop(self):
-        """Obtiene el event loop actual o crea uno nuevo (compatible con Streamlit)."""
-        try:
-            loop = asyncio.get_event_loop()
-            if loop.is_closed():
-                raise RuntimeError("Event loop is closed")
-            return loop
-        except RuntimeError:
-            # Si no hay loop o está cerrado, crear uno nuevo
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            return loop
-    
-    async def _generate_audio_async(self, text, output_path, voice_id):
-        """Helper async con timeout para evitar cuelgues."""
-        communicate = edge_tts.Communicate(text, voice_id)
-        await asyncio.wait_for(communicate.save(output_path), timeout=30)
 
 # === PRUEBA RÁPIDA ===
 if __name__ == "__main__":
     agent = AudioGeneratorAgent()
     try:
-        agent.generate_narration("Prueba de audio robusta con reintentos.", "test_hardened.mp3")
-        print("Prueba completada.")
+        result = agent.generate_narration("Prueba de audio con Google Text to Speech en español mexicano.", "test_gtts.mp3")
+        if result:
+            print(f"✅ Audio generado: {result}")
+        else:
+            print("❌ Falló la generación")
     except Exception as e:
         print(f"Prueba fallida: {e}")

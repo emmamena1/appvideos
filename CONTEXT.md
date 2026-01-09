@@ -177,11 +177,15 @@ Y estaré listo para ayudarte con contexto completo de:
 ## ✅ ESTADO ACTUAL:
 
 - ✅ Gemini 2.0 Flash migrado y funcionando
-- ✅ Edge TTS Hardened configurado (Audio TTS Gratis + Anti-403)
+- ✅ **gTTS (Google Text-to-Speech)** configurado (Audio TTS Gratis + Sin bloqueos)
+  - Migrado desde Edge TTS (Microsoft bloqueaba con 403)
+  - Español mexicano con acento natural
+  - Sin límites ni API keys
 - ✅ Together AI Flux configurado (imágenes cinematográficas)
 - ✅ **Dependencias actualizadas**:
   - google-genai v1.57.0 (SDK oficial de Gemini)
   - moviepy v1.0.3 (ensamblaje de videos)
+  - gTTS v2.5.4 (generación de audio)
 - ✅ App con 4 fases implementadas
 - ✅ **Fase 1 (Input) MEJORADA:**
   - Sistema de Plantillas Pre-configuradas (Marketing, Fitness, etc.)
