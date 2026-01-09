@@ -57,7 +57,9 @@ class AudioGeneratorAgent:
             # Generar con reintentos
             for attempt in range(self.max_retries):
                 try:
-                    asyncio.run(self._generate_audio_async(text, output_path, self.voice))
+                    # FIX: Usar loop existente o crear uno nuevo (compatible con Streamlit)
+                    loop = self._get_or_create_event_loop()
+                    loop.run_until_complete(self._generate_audio_async(text, output_path, self.voice))
                     
                     # Validar
                     if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
@@ -89,6 +91,19 @@ class AudioGeneratorAgent:
             import traceback
             traceback.print_exc()
             return None
+    
+    def _get_or_create_event_loop(self):
+        """Obtiene el event loop actual o crea uno nuevo (compatible con Streamlit)."""
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_closed():
+                raise RuntimeError("Event loop is closed")
+            return loop
+        except RuntimeError:
+            # Si no hay loop o está cerrado, crear uno nuevo
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            return loop
     
     async def _generate_audio_async(self, text, output_path, voice_id):
         """Helper async con timeout para evitar cuelgues."""
