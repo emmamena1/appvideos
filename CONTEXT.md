@@ -188,6 +188,11 @@ Y estaré listo para ayudarte con contexto completo de:
     - Inputs simplificados (tema, producto, hook)
     - Genera 4 escenas optimizadas al instante
     - Escenas editables en Fase 2
+    - 🔥 **PRODUCTO_TEMPLATE**: Sistema de memoria de producto
+      - Template "El Secreto de las Frutíferas en Macetas" integrado
+      - Gemini conoce los 13 capítulos + oferta $7 + 4 bonos
+      - Mapeo inteligente de hooks a capítulos específicos
+      - CTAs 100% on-brand en cada video generado
   - 🆕 **MODO PASTE GEMINI**: Parser de guiones existentes
     - Pega texto de Gemini generado externamente
     - Extracción automática con regex (timestamps + prompts)
@@ -219,7 +224,7 @@ Y estaré listo para ayudarte con contexto completo de:
 
 ---
 
-**Última actualización:** 2026-01-08  
-**Versión:** 2.3 (3 Modes: Manual + Auto + Paste Parser)  
+**Última actualización:** 2026-01-09  
+**Versión:** 2.4 (Product Template System + 3 Modes)  
 **Proyecto:** Video Factory AI (Quantum Clic)
 **Estado:** ✅ SISTEMA COMPLETO - Listo para Producción

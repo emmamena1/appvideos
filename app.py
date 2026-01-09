@@ -12,6 +12,43 @@ from agents.audio_generator import AudioGeneratorAgent
 from agents.visual_generator import VisualGeneratorAgent
 from agents.video_editor import VideoEditorAgent  # NUEVO AGENTE - Fase 4
 
+# --- PLANTILLA DE PRODUCTO: "El Secreto de las Frutíferas en Macetas" ---
+PRODUCTO_TEMPLATE = """
+📚 MANUAL: 'El Secreto de las Frutíferas en Macetas' - 13 CAPÍTULOS
+
+🎯 PROBLEMAS QUE RESUELVE (Por Capítulo):
+• Capítulo 3: Drenaje perfecto (90% de los fallos vienen de aquí)
+• Capítulo 4: Sustrato aireado (clave para raíces sanas)
+• Capítulo 6: Cítricos enanos para departamentos
+• Capítulo 9: Fertilizante casero de cocina
+• Capítulo 11: Calendario de riego 90 días
+
+💰 OFERTA EXACTA:
+Precio original: $47
+Precio promocional: $7 USD
+
+🎁 4 BONOS INCLUIDOS:
+1. Lista de macetas exactas (valor $12)
+2. Checklist de errores fatales (valor $15)
+3. Fertilizantes de cocina (valor $10)
+4. Calendario de cosecha (valor $10)
+
+🔥 CTA SIEMPRE:
+"Manual $7 + 4 bonos GRATIS - Link en bio"
+
+📖 ESTRUCTURA DEL MANUAL:
+Los 13 capítulos cubren desde selección de macetas hasta cosecha completa.
+Cada capítulo tiene soluciones paso a paso probadas.
+"""
+
+# Mapeo inteligente de hook a capítulo específico
+HOOK_TO_CHAPTER = {
+    "Drenaje": "Capítulo 3 (Drenaje perfecto - 90% de fallos)",
+    "Dinero": "Ahorro vs supermercado (ROI en 90 días)",
+    "Espacio": "Capítulo 6 (Cítricos enanos para departamentos)",
+    "Tiempo": "Capítulo 11 (Calendario de riego automático 90 días)"
+}
+
 # --- FUNCIONES DE AUTO-GENERACIÓN ---
 def parse_gemini_scenes(response_text: str) -> list:
     """
@@ -64,27 +101,38 @@ def generate_auto_escenas(tema: str, producto: str, hook: str) -> list:
     
     client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
     
-    prompt = f"""Genera EXACTAMENTE 4 escenas para un video TikTok que venda "{producto}".
+    # Obtener el capítulo sugerido según el hook
+    capitulo_sugerido = HOOK_TO_CHAPTER.get(hook, "Manual completo")
+    
+    prompt = f"""
+{PRODUCTO_TEMPLATE}
 
+CONTEXTO DEL VIDEO:
 Tema: {tema}
 Hook enfocado en: {hook}
+Producto: {producto}
+Capítulo recomendado para este hook: {capitulo_sugerido}
 
-INSTRUCCIONES:
-- Escena 1: Hook potente relacionado con {hook} (máximo 15 palabras en español)
-- Escena 2: Desarrollo del problema (máximo 15 palabras en español)
-- Escena 3: Solución/beneficio (máximo 15 palabras en español)
-- Escena 4: CTA orgánico (máximo 15 palabras en español)
+Genera EXACTAMENTE 4 escenas para un video TikTok de 45 segundos total.
+
+INSTRUCCIONES (ESTRICTAS):
+- Escena 1 (0-3s): Hook POTENTE relacionado con {hook} - Menciona el DOLOR específico (MAX 12 palabras español)
+- Escena 2 (3-20s): Profundiza el PROBLEMA usando datos del manual (menciona capítulo si aplica) (MAX 15 palabras español)
+- Escena 3 (20-38s): SOLUCIÓN directa - CITA el capítulo específico del manual: "{capitulo_sugerido}" (MAX 15 palabras español)
+- Escena 4 (38-45s): CTA orgánico - USA EXACTAMENTE: "Manual $7 + 4 bonos GRATIS - Link en bio"
 
 FORMATO DE RESPUESTA (ESTRICTO):
-ESCENA 1: [texto narración español 15s] | [prompt imagen detallado en INGLÉS para Flux-Schnell]
-ESCENA 2: [texto narración español 15s] | [prompt imagen detallado en INGLÉS para Flux-Schnell]
-ESCENA 3: [texto narración español 15s] | [prompt imagen detallado en INGLÉS para Flux-Schnell]
-ESCENA 4: [texto CTA español 15s] | [prompt imagen detallado en INGLÉS para Flux-Schnell]
+ESCENA 1: [texto español MAX 12 palabras] | [prompt imagen INGLÉS cinematográfico]
+ESCENA 2: [texto español MAX 15 palabras] | [prompt imagen INGLÉS cinematográfico]
+ESCENA 3: [texto español MAX 15 palabras - MENCIONA CAPÍTULO] | [prompt imagen INGLÉS cinematográfico]
+ESCENA 4: Manual $7 + 4 bonos GRATIS - Link en bio | [prompt imagen INGLÉS call-to-action visual]
 
-IMPORTANTE:
-- Los prompts de imagen deben estar en INGLÉS y ser ultra-específicos
-- Estilo visual: Ultra-realistic, cinematic photography, professional lighting
-- Cada narración debe ser directa, coloquial y viral
+IMPORTANTE PARA PROMPTS VISUALES:
+- TODOS los prompts deben estar en INGLÉS
+- Estilo obligatorio: "Cinematic 8K photography, depth of field, professional lighting"
+- Incluir elementos: Frutas frescas, macetas modernas, balcones/terrazas, manos plantando
+- Composición: Ultra-realistic, natural colors, high resolution
+- Cada prompt debe ser único y específico para la escena
 """
 
     try:
