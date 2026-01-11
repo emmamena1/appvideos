@@ -26,13 +26,26 @@ class VeoGeneratorAgent:
             credentials = None
             if "GCP_SERVICE_ACCOUNT" in st.secrets:
                 import json
-                # Puede ser un path a un archivo o un dict con el JSON
+                import tempfile
+                
+                # Obtener data
                 creds_data = st.secrets["GCP_SERVICE_ACCOUNT"]
+                
                 if isinstance(creds_data, str) and creds_data.endswith(".json"):
                     credentials = creds_data
+                    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials
                 else:
-                    # Asumimos que es el contenido del JSON
-                    credentials = dict(creds_data)
+                    # Si es un dict/TOML, crear archivo temporal
+                    creds_dict = dict(creds_data)
+                    
+                    # Usar un archivo temporal fijo o en el sistema
+                    self.temp_creds = os.path.join(tempfile.gettempdir(), "gcp_creds_veo.json")
+                    with open(self.temp_creds, "w") as f:
+                        json.dump(creds_dict, f)
+                    
+                    # Establecer variable de entorno (CRÍTICO para Vertex SDK)
+                    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.temp_creds
+                    credentials = self.temp_creds
             
             self.client = genai.Client(
                 vertexai=True,
