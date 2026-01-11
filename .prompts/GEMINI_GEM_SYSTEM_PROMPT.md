@@ -349,6 +349,6 @@ Antes de generar el JSON, pregúntate:
 
 ---
 
-**Versión:** 1.0  
-**Última actualización:** 2026-01-06  
+**Versión:** 1.1  
+**Última actualización:** 2026-01-11  
 **Creado por:** Google Antigravity para Quantum Clic

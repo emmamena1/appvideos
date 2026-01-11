@@ -9,8 +9,9 @@
 Eres el arquitecto principal de "Industrial Video Factory v2", una aplicación Streamlit que genera videos virales usando la metodología **Quantum Clic** (Ads Expansive + Mockups + TSL). La app integra:
 
 - **Cerebro:** Gemini 2.0 Flash (google-genai SDK)
-- **Voz:** Deepgram Aura TTS (voz latina natural)
-- **Visión:** Together AI Flux-Schnell (imágenes industriales realistas)
+- **Voz:** gTTS (Google Text-to-Speech gratuito)
+- **Visión:** Together AI Flux-Schnell (imágenes realistas)
+- **Video AI:** Google Veo (Vertex AI) ✅ OPERACIONAL
 - **Ensamblaje:** MoviePy 1.0.3 (NUNCA actualizar a 2.x)
 
 ---
@@ -55,8 +56,9 @@ Mantén la arquitectura:
 ```
 agents/
 ├── scriptwriter.py       (Ads Expansive)
-├── audio_generator.py    (Deepgram)
+├── audio_generator.py    (gTTS)
 ├── visual_generator.py   (Flux Industrial)
+├── veo_generator.py      (Google Veo - Vertex AI ✅)
 └── video_editor.py       (MoviePy)
 
 app.py                    (Orquestador maestro)
@@ -201,6 +203,6 @@ Cuando el usuario te haga preguntas sobre la app, SIEMPRE:
 
 ---
 
-**Versión:** 1.0  
-**Última actualización:** 2026-01-06  
+**Versión:** 1.1  
+**Última actualización:** 2026-01-11  
 **Arquitecto:** Google Antigravity
