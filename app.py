@@ -212,49 +212,56 @@ Referencia sugerida para usar: {capitulo_sugerido}
 
 🎭 REGLAS DE HUMANIZACIÓN (CRÍTICO):
 
-1. LENGUAJE NATURAL EN ESPAÑOL:
-   - Tono conversacional, cercano y auténtico
-   - Usa POSESIVOS al mencionar el contenido: "mi guía", "mi manual", "mi curso", "mi programa"
+1. LENGUAJE NATURAL EN ESPAÑOL (NEUTRO):
+   - Tono conversacional, cercano y auténtico. Evita regionalismos marcados.
+   - Usa POSESIVOS al mencionar el contenido: "mi guía", "mi manual", "mi curso", "mi programa".
    - Ejemplos:
      * ❌ MAL: "El capítulo 3 explica..."
      * ✅ BIEN: "En mi guía, en el capítulo 3, explico..."
      * ✅ BIEN: "Lo que descubrí y puse en mi manual..."
 
-2. ❌ PALABRAS PROHIBIDAS (detección IA):
+2. 🎁 HUMANIZACIÓN DE LOS BONOS (PERSONAL):
+   - No digas "+ 4 bonos" como un robot.
+   - Di que SON TUYOS y que LOS REGALAS para ayudar.
+   - Ejemplos:
+     * ✅ "Te regalo 4 guías extra de mi parte"
+     * ✅ "Incluyo 4 bonos para ayudarte a acelerar el proceso"
+     * ✅ "Te llevas 4 regalos gratis en mi manual"
+
+3. ❌ PALABRAS PROHIBIDAS (detección IA):
    NUNCA uses: revolucionario, increíble, secreto, descubre, desbloquear,
    transformar, domina, maximiza, "el poder de", "imagina", "técnica avanzada"
    
    ✅ Usa en su lugar: "esto funciona", "probé y funciona", "encontré que",
    "en mi experiencia", "resulta que"
 
-3. STORYTELLING AUTÉNTICO:
+4. STORYTELLING AUTÉNTICO:
    - Experiencias: "Probé esto...", "Me pasó que..."
    - Datos específicos: "90% falla por...", "3 de 4 personas..."
    - Descubrimientos: "Resulta que...", "Lo que encontré es..."
 
-4. FLOW CONVERSACIONAL:
-   - Escena 1: Pregunta directa o situación relatable
-   - Escena 2: Explica problema de forma conversacional
-   - Escena 3: Solución con referencia NATURAL al contenido (usa posesivos)
-   - Escena 4: CTA simple del template
+5. FLOW CONVERSACIONAL:
+   - Escena 1: Pregunta directa o situación relatable.
+   - Escena 2: Explica el problema de forma conversacional.
+   - Escena 3: Solución con referencia NATURAL al contenido (usa posesivos).
+   - Escena 4: Oferta humana con mención personal de los bonos.
 
 EJEMPLOS DE NARRACIÓN CORRECTA:
 
 ESCENA 1 (Hook):
-❌ "Descubre el secreto del drenaje perfecto"
+❌ "¿Quieres descubrir el secreto del drenaje?"
 ✅ "¿Te pasa que se mueren las plantas sin razón aparente?"
 ✅ "3 de cada 4 macetas fallan por ESTO"
-
-ESCENA 2 (Problema):
-❌ "El drenaje inadecuado provoca muerte vegetal"
-✅ "El agua se queda abajo, las raíces se pudren... pasa más de lo que crees"
-✅ "Resulta que el 90% falla por esto mismo"
 
 ESCENA 3 (Solución con referencia NATURAL):
 ❌ "El Capítulo 3 revela la técnica definitiva"
 ✅ "En mi guía, capítulo 3, te muestro cómo arreglarlo en 2 pasos"
 ✅ "Lo explico en mi manual (capítulo 3): drenaje perfecto y simple"
-✅ "En mi curso, módulo 5, cubro esto - funciona de verdad"
+
+ESCENA 4 (Oferta Humana):
+❌ "Manual $7 + 4 bonos. Link en bio."
+✅ "Mi guía completa ($7) incluye 4 regalos de mi parte. Link en bio"
+✅ "Te llevas mi manual por $7 y te regalo 4 guías extra. Link en bio"
 
 GENERA EXACTAMENTE 4 ESCENAS (45 segundos total):
 
@@ -263,20 +270,19 @@ ESTRUCTURA ESTRICTA:
 - Escena 2 (3-20s): Problema conversacional - Menciona datos/experiencia (MAX 15 palabras español)
 - Escena 3 (20-38s): Solución con referencia NATURAL a "{capitulo_sugerido}"
   * USA POSESIVOS: "en mi guía/manual/curso/programa" (MAX 15 palabras español)
-- Escena 4 (38-45s): CTA exacto del template del producto
+- Escena 4 (38-45s): Oferta humana con mención personal de los 4 bonos.
+  * USA: "te regalo", "incluyo", "de mi parte". (MAX 15 palabras español)
 
 FORMATO DE RESPUESTA (ESTRICTO):
 ESCENA 1: [texto natural español] | [prompt imagen INGLÉS cinematográfico]
 ESCENA 2: [texto natural español] | [prompt imagen INGLÉS cinematográfico]
 ESCENA 3: [referencia natural + {capitulo_sugerido}] | [prompt imagen INGLÉS cinematográfico]
-ESCENA 4: [CTA exacto del template] | [prompt imagen INGLÉS call-to-action]
+ESCENA 4: [oferta humana personal con bonos] | [prompt imagen INGLÉS call-to-action]
 
 IMPORTANTE PARA PROMPTS VISUALES:
-- TODOS los prompts deben estar en INGLÉS
 - Estilo obligatorio: "Cinematic 8K photography, depth of field, professional lighting"
-- Incluir elementos relevantes al producto
-- Composición: Ultra-realistic, natural colors, high resolution
-- Cada prompt debe ser único y específico para la escena
+- Incluir elementos relevantes al producto.
+- Composición: Ultra-realistic, natural colors, high resolution.
 """
 
     try:

@@ -247,7 +247,7 @@ Y estaré listo para ayudarte con contexto completo de:
 ---
 
 **Última actualización:** 2026-01-11  
-**Versión:** 2.5 (Multi-Product System + gTTS Audio)  
+**Versión:** 2.6 (Humanized Scripts + Multi-Product)  
 **Proyecto:** Video Factory AI (Quantum Clic)
 **Estado:** ✅ SISTEMA COMPLETO - Listo para Producción
 
@@ -279,10 +279,9 @@ Y estaré listo para ayudarte con contexto completo de:
 
 | Versión | Fecha | Cambios Principales | Commits |
 |---------|-------|---------------------|---------|
-| **2.5** | 2026-01-11 | Multi-producto + gTTS audio | 307cb53, 0cca30e, 9247b29, 9be44e8 |
+| **2.6** | 2026-01-11 | Humanización de Guiones + Bonos | 0060238 |
+| 2.5 | 2026-01-11 | Multi-producto + gTTS audio | 307cb53, 0cca30e, 9247b29, 9be44e8 |
 | 2.4 | 2026-01-09 | Product template system | - |
-| 2.3 | 2026-01-08 | Modo automático 4 escenas | - |
-| 2.0 | 2026-01-07 | Migración a Gemini 2.0 Flash | - |
 
 ### Características Implementadas
 
@@ -302,6 +301,13 @@ Y estaré listo para ayudarte con contexto completo de:
 - Audio: gTTS con acento mexicano natural
 - Imágenes: Flux-Schnell 8K cinematográfico
 - Video: MoviePy con subtítulos y música
+
+✅ **Humanización de Guiones (v2.6)**:
+- Reglas de lenguaje natural en español neutro.
+- Uso de posesivos: "mi guía", "mi manual", "mi programa".
+- Mención personal de bonos: "te regalo", "de mi parte", "incluyo".
+- Anti-IA patterns: Bloqueo de palabras como "revolucionario", "increíble", "secreto".
+- Storytelling auténtico basado en experiencias y datos específicos.
 
 ✅ **Flujo Completo**
 1. **Fase 1**: Input (Manual/Automático/Paste)
@@ -350,4 +356,4 @@ streamlit run app.py
 
 **Desarrollado por**: Emmanuel  
 **GitHub**: [appvideos](https://github.com/emmamena1/appvideos)  
-**Último commit**: 9be44e8
+**Último commit**: 0060238
