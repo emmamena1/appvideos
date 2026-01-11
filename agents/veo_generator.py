@@ -13,57 +13,70 @@ class VeoGeneratorAgent:
     def __init__(self):
         """
         Inicializa el agente de Google Veo usando Vertex AI.
-        Requiere que el entorno tenga configuradas las Application Default Credentials
-        o que se ejecute en un entorno con permisos de GCP.
+        Busca credenciales en este orden:
+        1. GCP_SERVICE_ACCOUNT_FILE (ruta a archivo JSON) - PREFERIDO
+        2. GCP_SERVICE_ACCOUNT (contenido inline en TOML)
+        3. GOOGLE_APPLICATION_CREDENTIALS (variable de entorno)
         """
         self.output_dir = os.path.join("assets", "generated_videos")
         os.makedirs(self.output_dir, exist_ok=True)
         
         # Cliente GenAI configurado para Vertex AI
         try:
+            from google.oauth2 import service_account
             credentials = None
             
-            if "GCP_SERVICE_ACCOUNT" in st.secrets:
+            # OPCIÓN 1: Ruta al archivo JSON (preferido, evita problemas de formato)
+            if "GCP_SERVICE_ACCOUNT_FILE" in st.secrets:
+                json_path = st.secrets["GCP_SERVICE_ACCOUNT_FILE"]
+                if os.path.exists(json_path):
+                    credentials = service_account.Credentials.from_service_account_file(
+                        json_path,
+                        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                    )
+                    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
+                    print(f"DEBUG: Usando credenciales desde archivo: {json_path}")
+            
+            # OPCIÓN 2: Contenido inline en TOML (puede tener problemas con private_key)
+            elif "GCP_SERVICE_ACCOUNT" in st.secrets:
                 import json
                 import tempfile
-                from google.oauth2 import service_account
                 
-                # Obtener data de secrets
                 creds_data = st.secrets["GCP_SERVICE_ACCOUNT"]
+                creds_dict = dict(creds_data)
                 
-                if isinstance(creds_data, str) and creds_data.endswith(".json"):
-                    # Si es una ruta a un archivo JSON
-                    credentials = service_account.Credentials.from_service_account_file(
-                        creds_data,
-                        scopes=["https://www.googleapis.com/auth/cloud-platform"]
-                    )
-                    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = creds_data
-                else:
-                    # Si es un dict/TOML inline, convertir a dict puro
-                    creds_dict = dict(creds_data)
-                    
-                    # Crear objeto de credenciales directamente desde el dict
-                    credentials = service_account.Credentials.from_service_account_info(
-                        creds_dict,
-                        scopes=["https://www.googleapis.com/auth/cloud-platform"]
-                    )
-                    
-                    # También guardar como archivo temporal para respaldo
-                    self.temp_creds = os.path.join(tempfile.gettempdir(), "gcp_creds_veo.json")
-                    with open(self.temp_creds, "w") as f:
-                        json.dump(creds_dict, f)
-                    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.temp_creds
+                credentials = service_account.Credentials.from_service_account_info(
+                    creds_dict,
+                    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                
+                # También guardar como archivo temporal
+                self.temp_creds = os.path.join(tempfile.gettempdir(), "gcp_creds_veo.json")
+                with open(self.temp_creds, "w") as f:
+                    json.dump(creds_dict, f)
+                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.temp_creds
+                print("DEBUG: Usando credenciales desde secrets inline")
             
-            # Crear cliente con credenciales (objeto, no string)
+            # OPCIÓN 3: Variable de entorno ya configurada
+            elif "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
+                json_path = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+                credentials = service_account.Credentials.from_service_account_file(
+                    json_path,
+                    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                print(f"DEBUG: Usando GOOGLE_APPLICATION_CREDENTIALS: {json_path}")
+            
+            # Crear cliente
             self.client = genai.Client(
                 vertexai=True,
                 project=PROJECT_ID,
                 location=LOCATION,
-                credentials=credentials  # Ahora es un objeto Credentials, no un string
+                credentials=credentials
             )
             self.model_id = "veo-001"
+            print("DEBUG: Cliente Veo inicializado correctamente")
+            
         except Exception as e:
-            # No mostrar error invasivo aquí, solo loggear
             print(f"DEBUG: Error al inicializar Vertex AI Client: {e}")
             import traceback
             traceback.print_exc()
