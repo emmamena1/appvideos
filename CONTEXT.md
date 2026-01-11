@@ -247,9 +247,9 @@ Y estaré listo para ayudarte con contexto completo de:
 ---
 
 **Última actualización:** 2026-01-11  
-**Versión:** 2.7 (Hotmart Bonus PDFs + Humanized Scripts)  
+**Versión:** 2.8 (Google Veo Integration + Premium Content)  
 **Proyecto:** Video Factory AI (Quantum Clic)
-**Estado:** ✅ SISTEMA COMPLETO - Listo para Producción
+**Estado:** ✅ SISTEMA PREMIUM - Listo para Producción
 
 ---
 
@@ -260,10 +260,10 @@ Y estaré listo para ayudarte con contexto completo de:
 | Componente | Tecnología | Versión | Estado |
 |------------|------------|---------|--------|
 | **Scripts** | Google Gemini 2.0 Flash | API v1.57.0 | ✅ Operacional |
+| **Video AI** | **Google Veo (Beta)** | Vertex AI | ✅ NUEVO |
 | **Audio** | gTTS (Google TTS) | v2.5.4 | ✅ Operacional |
 | **Imágenes** | Together AI Flux-Schnell | Latest | ✅ Operacional |
-| **Video** | MoviePy | v1.0.3 | ✅ Operacional |
-| **PDF Bonos** | fpdf2 | v2.8.5 | ✅ Operacional |
+| **Video Editor** | MoviePy | v1.0.3 | ✅ Soporta Clips MP4 |
 
 ---
 
@@ -271,19 +271,16 @@ Y estaré listo para ayudarte con contexto completo de:
 
 | Versión | Fecha | Cambios Principales |
 |---------|-------|---------------------|
-| **2.7** | 2026-01-11 | Bonos Premium PDF para Hotmart |
-| **2.6** | 2026-01-11 | Humanización de Guiones + Bonos |
+| **2.8** | 2026-01-11 | Integración Google Veo (Vertex AI) |
+| 2.7 | 2026-01-11 | Bonos Premium PDF para Hotmart |
+| 2.6 | 2026-01-11 | Humanización de Guiones + Bonos |
 
 ### Características Implementadas
 
-✅ **Generación de Bonos Premium (v2.7)**:
-- Portadas 3D profesionales generadas por IA.
-- Automatización PDF con `generate_pdfs.py`.
-- 4 guías completas para el nicho de frutíferas.
-
-✅ **Humanización de Guiones (v2.6)**:
-- Lenguaje natural, posesivos y mención personal de bonos.
-- Anti-IA patterns (bloqueo de palabras clichés).
+✅ **Generación de Video Cinemático (v2.8)**:
+- Integración con Google Veo vía Vertex AI.
+- Opción de alternar entre Imagen (Rápido) y Video (Premium).
+- Soporte para mezcla de clips MP4 en el ensamblaje final.
 
 ✅ **Flujo Completo**
 1. **Fase 1**: Input (Manual/Automático/Paste)
