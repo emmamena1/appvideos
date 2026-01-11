@@ -425,7 +425,25 @@ with st.sidebar:
         st.success("🎥 Video (Google Veo): ONLINE")
     else:
         st.error("🎥 Video (Google Veo): OFFLINE")
-        st.info("💡 **Tip**: Ejecuta `gcloud auth application-default login` en tu terminal para activar Veo.")
+        st.warning("⚠️ **GCloud SDK no detectado**")
+        st.markdown("""
+        Para activar Veo, necesitas instalar Google Cloud SDK:
+        1. [Descargar GCloud SDK](https://cloud.google.com/sdk/docs/install-sdk)
+        2. Abrir terminal y ejecutar:
+        `gcloud auth application-default login`
+        """)
+
+    st.markdown("---")
+    
+    # 🆕 Selector de Modo Visual (Global en Sidebar)
+    st.markdown("**🎨 Modo de Generación Visual:**")
+    visual_mode = st.radio(
+        "Preferir:",
+        ["🖼️ Imagen (Flux)", "🎥 Video (Veo)"],
+        index=1 if st.session_state.use_video else 0,
+        help="Video (Veo) es premium y tarda más. Imágenes (Flux) es ultra rápido."
+    )
+    st.session_state.use_video = "Video" in visual_mode
 
     st.markdown("---")
     
@@ -771,16 +789,7 @@ elif st.session_state['step'] == 3:
             st.rerun()
     else:
         st.header("🎨 Fase 3: Producción de Assets")
-    
-    # 🆕 Selector de Modo Visual (Veo Integration)
-    st.info("💡 **Novedad**: Ahora puedes elegir entre generar imágenes estáticas o videos cinemáticos con Google Veo.")
-    visual_mode = st.radio(
-        "Modo de Generación Visual:",
-        ["🖼️ Imagen (Flux - Rápido)", "🎥 Video (Google Veo - Premium)"],
-        index=1 if st.session_state.use_video else 0,
-        help="El modo video usa tus créditos de Google Cloud y tarda más tiempo (~60s por escena)."
-    )
-    st.session_state.use_video = "Video" in visual_mode
+        st.info(f"🚀 Modo Activo: {'🎥 VIDEO (Veo)' if st.session_state.use_video else '🖼️ IMAGEN (Flux)'}")
 
     if st.button("🚀 GENERAR / ACTUALIZAR TODOS LOS ASSETS"):
         # Preparar contenedores
