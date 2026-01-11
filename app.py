@@ -421,10 +421,11 @@ with st.sidebar:
     else:
         st.error("👁️ Visuals (Flux): OFFLINE")
 
-    if "GOOGLE_CLOUD_PROJECT" in st.secrets and "GOOGLE_APPLICATION_CREDENTIALS" in st.secrets:
+    if st.session_state.veo_agent.is_ready():
         st.success("🎥 Video (Google Veo): ONLINE")
     else:
         st.error("🎥 Video (Google Veo): OFFLINE")
+        st.info("💡 **Tip**: Ejecuta `gcloud auth application-default login` en tu terminal para activar Veo.")
 
     st.markdown("---")
     
