@@ -787,38 +787,55 @@ elif st.session_state['step'] == 3:
         status_text = st.empty()
         
         # Procesar escenas
-        scenes = st.session_state['script_data'].get('scenes', []) # Use script_data
-        total_steps = len(scenes) * 2
+        scenes = st.session_state['script_data'].get('scenes', [])
+        total_scenes = len(scenes)
+        total_steps = total_scenes * 2
         current_step = 0
         
         generated_assets = []
         errors = []
-                # 2️⃣ GENERAR IMAGEN (Together AI / Flux-Schnell)
-                with col_visual:
-                    st.markdown("**🎨 Renderizando Imagen (Flux-Schnell Ultra HD)...**")
-                    img_file = f"scene_{scene_num}.png"
-                    img_path = visual_agent.generate_image(scene['visual_prompt'], img_file)
-                    
-                    if img_path:
-                        st.image(img_path, caption=f"Escena {scene_num}", use_container_width=True)
-                        scene['image_path'] = img_path
-                        st.success(f"✅ Imagen: {img_file}")
-                    else:
-                        st.error(f"❌ Fallo en imagen escena {scene_num}")
-                        errors.append(f"Imagen escena {scene_num}")
-                        scene['image_path'] = None
-                
-                # Mostrar narración
-                st.caption(f"**📝 Narración:** {scene['narration'][:100]}...")
+        
+        # 🎬 PROCESAR CADA ESCENA
+        for i, scene in enumerate(scenes):
+            scene_num = i + 1
+            status_text.markdown(f"### 🎬 Procesando Escena {scene_num}/{total_scenes}...")
             
+            # 1️⃣ GENERAR AUDIO
+            status_text.text(f"🎙️ Generando audio para escena {scene_num}...")
+            audio_file = f"scene_{scene_num}.mp3"
+            audio_path = st.session_state.audio_agent.generate_narration(scene['narration'], audio_file)
+            
+            if audio_path:
+                scene['audio_path'] = audio_path
+            else:
+                errors.append(f"Audio escena {scene_num}")
+            
+            current_step += 1
+            asset_progress.progress(current_step / total_steps)
+            
+            # 2️⃣ GENERAR VISUAL (Imagen o Video)
+            if st.session_state.use_video:
+                status_text.text(f"🎥 Generando video Veo para escena {scene_num} (espera ~60s)...")
+                video_path = st.session_state.veo_agent.generate_video_clip(scene['visual_prompt'])
+                if video_path:
+                    scene['image_path'] = video_path
+                else:
+                    errors.append(f"Video Veo escena {scene_num}")
+            else:
+                status_text.text(f"🖼️ Generando imagen Flux para escena {scene_num}...")
+                img_file = f"scene_{scene_num}.png"
+                image_path = st.session_state.visual_agent.generate_image(scene['visual_prompt'], img_file)
+                if image_path:
+                    scene['image_path'] = image_path
+                else:
+                    errors.append(f"Imagen Flux escena {scene_num}")
+            
+            current_step += 1
+            asset_progress.progress(current_step / total_steps)
             generated_assets.append(scene)
             
-            # Actualizar progreso
-            progress = (scene_num) / total_scenes
-            progress_bar.progress(progress)
-        
         # 🎉 RESULTADO FINAL
-        progress_bar.progress(1.0)
+        asset_progress.progress(1.0)
         status_text.markdown("### ✅ Producción Completada")
         
         if not errors:
@@ -833,8 +850,12 @@ elif st.session_state['step'] == 3:
             for idx, s in enumerate(generated_assets):
                 c1, c2, c3 = st.columns([1, 2, 4])
                 
+                # Mostrar imagen o video
                 if 'image_path' in s and s['image_path']:
-                    c1.image(s['image_path'], use_container_width=True)
+                    if s['image_path'].lower().endswith('.mp4'):
+                        c1.video(s['image_path'])
+                    else:
+                        c1.image(s['image_path'], use_container_width=True)
                 
                 if 'audio_path' in s and s['audio_path']:
                     c2.audio(s['audio_path'])
@@ -842,14 +863,15 @@ elif st.session_state['step'] == 3:
                 c3.markdown(f"**Escena {idx + 1}:** *{s['narration'][:80]}...*")
             
             st.markdown("---")
-            st.info("🔜 **Próximo Paso:** Fase 4 - Ensamblaje con MoviePy (VideoEditorAgent)")
+            st.info("🔜 **Próximo Paso:** Fase 4 - Ensamblaje con MoviePy")
             
             if st.button("👁️ Revisar Assets Generados", use_container_width=True, type="primary"):
-                st.session_state['step'] = 3.5  # 🆕 IR A REVISIÓN
+                st.session_state['step'] = 3.5
                 st.rerun()
-        
         else:
-            st.error(f"⚠️ Ocurrieron {len(errors)} errores durante la generación:")
+            st.error(f"❌ Hubo errores en: {', '.join(errors)}")
+            st.session_state['script_data']['scenes'] = generated_assets
+            
             for err in errors:
                 st.warning(f"• {err}")
             
