@@ -58,9 +58,9 @@ class VeoGeneratorAgent:
             operation = self.client.models.generate_videos(
                 model=self.model_id,
                 prompt=prompt,
-                config=types.GenerateVideoConfig(
+                config=types.GenerateVideosConfig(
                     aspect_ratio=aspect_ratio,
-                    # duration_seconds=int(duration.replace('s', '')), # Opcional según SDK
+                    # duration_seconds=5, # Opcional
                 )
             )
 
