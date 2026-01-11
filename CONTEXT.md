@@ -29,7 +29,7 @@
 
 ### Stack Tecnológico:
 - **Frontend:** Streamlit
-- **Cerebro:** Gemini 2.0 Flash (google-genai SDK v1.56.0)
+- **Cerebro:** Gemini 2.0 Flash (google-genai SDK v1.57.0)
 - **Voz:** Edge TTS Hardened (Gratis, Anti-403, es-MX-DaliaNeural)
 - **Visual:** Together AI Flux-Schnell (1024x1792, 9:16)
 - **Video:** MoviePy 1.0.3 + Pillow (Latest w/ ANTIALIAS Patch)
@@ -356,4 +356,4 @@ streamlit run app.py
 
 **Desarrollado por**: Emmanuel  
 **GitHub**: [appvideos](https://github.com/emmamena1/appvideos)  
-**Último commit**: 0060238
+**Último commit**: 61b0379
