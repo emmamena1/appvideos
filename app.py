@@ -200,6 +200,7 @@ def generate_auto_escenas(tema: str, producto: str, hook: str, producto_config: 
     # Obtener el capítulo/módulo sugerido según el hook
     capitulo_sugerido = hooks_producto.get(hook, "Manual completo")
     
+    
     prompt = f"""
 {template_producto}
 
@@ -207,21 +208,68 @@ CONTEXTO DEL VIDEO:
 Tema: {tema}
 Hook enfocado en: {hook}
 Producto: {producto}
-Capítulo recomendado para este hook: {capitulo_sugerido}
+Referencia sugerida para usar: {capitulo_sugerido}
 
-Genera EXACTAMENTE 4 escenas para un video TikTok de 45 segundos total.
+🎭 REGLAS DE HUMANIZACIÓN (CRÍTICO):
 
-INSTRUCCIONES (ESTRICTAS):
-- Escena 1 (0-3s): Hook POTENTE relacionado con {hook} - Menciona el DOLOR específico (MAX 12 palabras español)
-- Escena 2 (3-20s): Profundiza el PROBLEMA usando datos del manual (menciona capítulo/módulo si aplica) (MAX 15 palabras español)
-- Escena 3 (20-38s): SOLUCIÓN directa - CITA el capítulo/módulo específico: "{capitulo_sugerido}" (MAX 15 palabras español)
-- Escena 4 (38-45s): CTA orgánico - USA el CTA del template del producto
+1. LENGUAJE NATURAL EN ESPAÑOL:
+   - Tono conversacional, cercano y auténtico
+   - Usa POSESIVOS al mencionar el contenido: "mi guía", "mi manual", "mi curso", "mi programa"
+   - Ejemplos:
+     * ❌ MAL: "El capítulo 3 explica..."
+     * ✅ BIEN: "En mi guía, en el capítulo 3, explico..."
+     * ✅ BIEN: "Lo que descubrí y puse en mi manual..."
+
+2. ❌ PALABRAS PROHIBIDAS (detección IA):
+   NUNCA uses: revolucionario, increíble, secreto, descubre, desbloquear,
+   transformar, domina, maximiza, "el poder de", "imagina", "técnica avanzada"
+   
+   ✅ Usa en su lugar: "esto funciona", "probé y funciona", "encontré que",
+   "en mi experiencia", "resulta que"
+
+3. STORYTELLING AUTÉNTICO:
+   - Experiencias: "Probé esto...", "Me pasó que..."
+   - Datos específicos: "90% falla por...", "3 de 4 personas..."
+   - Descubrimientos: "Resulta que...", "Lo que encontré es..."
+
+4. FLOW CONVERSACIONAL:
+   - Escena 1: Pregunta directa o situación relatable
+   - Escena 2: Explica problema de forma conversacional
+   - Escena 3: Solución con referencia NATURAL al contenido (usa posesivos)
+   - Escena 4: CTA simple del template
+
+EJEMPLOS DE NARRACIÓN CORRECTA:
+
+ESCENA 1 (Hook):
+❌ "Descubre el secreto del drenaje perfecto"
+✅ "¿Te pasa que se mueren las plantas sin razón aparente?"
+✅ "3 de cada 4 macetas fallan por ESTO"
+
+ESCENA 2 (Problema):
+❌ "El drenaje inadecuado provoca muerte vegetal"
+✅ "El agua se queda abajo, las raíces se pudren... pasa más de lo que crees"
+✅ "Resulta que el 90% falla por esto mismo"
+
+ESCENA 3 (Solución con referencia NATURAL):
+❌ "El Capítulo 3 revela la técnica definitiva"
+✅ "En mi guía, capítulo 3, te muestro cómo arreglarlo en 2 pasos"
+✅ "Lo explico en mi manual (capítulo 3): drenaje perfecto y simple"
+✅ "En mi curso, módulo 5, cubro esto - funciona de verdad"
+
+GENERA EXACTAMENTE 4 ESCENAS (45 segundos total):
+
+ESTRUCTURA ESTRICTA:
+- Escena 1 (0-3s): Hook natural - Pregunta o dato impactante (MAX 12 palabras español)
+- Escena 2 (3-20s): Problema conversacional - Menciona datos/experiencia (MAX 15 palabras español)
+- Escena 3 (20-38s): Solución con referencia NATURAL a "{capitulo_sugerido}"
+  * USA POSESIVOS: "en mi guía/manual/curso/programa" (MAX 15 palabras español)
+- Escena 4 (38-45s): CTA exacto del template del producto
 
 FORMATO DE RESPUESTA (ESTRICTO):
-ESCENA 1: [texto español MAX 12 palabras] | [prompt imagen INGLÉS cinematográfico]
-ESCENA 2: [texto español MAX 15 palabras] | [prompt imagen INGLÉS cinematográfico]
-ESCENA 3: [texto español MAX 15 palabras - MENCIONA CAPÍTULO/MÓDULO] | [prompt imagen INGLÉS cinematográfico]
-ESCENA 4: [CTA del template] | [prompt imagen INGLÉS call-to-action visual]
+ESCENA 1: [texto natural español] | [prompt imagen INGLÉS cinematográfico]
+ESCENA 2: [texto natural español] | [prompt imagen INGLÉS cinematográfico]
+ESCENA 3: [referencia natural + {capitulo_sugerido}] | [prompt imagen INGLÉS cinematográfico]
+ESCENA 4: [CTA exacto del template] | [prompt imagen INGLÉS call-to-action]
 
 IMPORTANTE PARA PROMPTS VISUALES:
 - TODOS los prompts deben estar en INGLÉS
