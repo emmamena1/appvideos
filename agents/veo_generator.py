@@ -21,42 +21,52 @@ class VeoGeneratorAgent:
         
         # Cliente GenAI configurado para Vertex AI
         try:
-            # Intentar obtener credenciales de st.secrets si existen
-            # Esto permite usar Veo sin instalar el GCloud SDK completo
             credentials = None
+            
             if "GCP_SERVICE_ACCOUNT" in st.secrets:
                 import json
                 import tempfile
+                from google.oauth2 import service_account
                 
-                # Obtener data
+                # Obtener data de secrets
                 creds_data = st.secrets["GCP_SERVICE_ACCOUNT"]
                 
                 if isinstance(creds_data, str) and creds_data.endswith(".json"):
-                    credentials = creds_data
-                    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials
+                    # Si es una ruta a un archivo JSON
+                    credentials = service_account.Credentials.from_service_account_file(
+                        creds_data,
+                        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                    )
+                    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = creds_data
                 else:
-                    # Si es un dict/TOML, crear archivo temporal
+                    # Si es un dict/TOML inline, convertir a dict puro
                     creds_dict = dict(creds_data)
                     
-                    # Usar un archivo temporal fijo o en el sistema
+                    # Crear objeto de credenciales directamente desde el dict
+                    credentials = service_account.Credentials.from_service_account_info(
+                        creds_dict,
+                        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                    )
+                    
+                    # También guardar como archivo temporal para respaldo
                     self.temp_creds = os.path.join(tempfile.gettempdir(), "gcp_creds_veo.json")
                     with open(self.temp_creds, "w") as f:
                         json.dump(creds_dict, f)
-                    
-                    # Establecer variable de entorno (CRÍTICO para Vertex SDK)
                     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.temp_creds
-                    credentials = self.temp_creds
             
+            # Crear cliente con credenciales (objeto, no string)
             self.client = genai.Client(
                 vertexai=True,
                 project=PROJECT_ID,
                 location=LOCATION,
-                credentials=credentials
+                credentials=credentials  # Ahora es un objeto Credentials, no un string
             )
             self.model_id = "veo-001"
         except Exception as e:
             # No mostrar error invasivo aquí, solo loggear
             print(f"DEBUG: Error al inicializar Vertex AI Client: {e}")
+            import traceback
+            traceback.print_exc()
             self.client = None
 
     def generate_video_clip(self, prompt: str, aspect_ratio: str = "9:16", duration: str = "5s") -> Optional[str]:
