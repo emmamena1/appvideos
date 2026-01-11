@@ -1,91 +1,202 @@
 # CONTEXT.md - Video Factory AI
 
-**INSTRUCCIONES PARA ANTIGRAVITY:**
-1. Lee estos archivos antes de responder.
-2. ⚠️ **PROTOCOLO OBLIGATORIO:** Al finalizar CUALQUIER tarea de código, DEBES actualizar este archivo (`CONTEXT.md`) con el nuevo estado del sistema y realizar un `git push` de todos los cambios inmediatamente. NO ESPERES a que el usuario lo pida.
+> ⚠️ **INSTRUCCIONES PARA IA:** Lee este archivo COMPLETO antes de ejecutar cualquier tarea. Este es tu "cerebro" del proyecto.
 
 ---
 
-## 🎯 PROYECTO: Video Factory AI (v2.9)
-**Estado:** ✅ SISTEMA COMPLETO - Multi-Producto + Google Veo OPERACIONAL + Bonos Hotmart
+## 🎯 RESUMEN EJECUTIVO
+
+| Campo | Valor |
+|-------|-------|
+| **Proyecto** | Video Factory AI (Quantum Clic) |
+| **Versión** | 2.9 |
+| **Estado** | ✅ SISTEMA COMPLETO Y OPERACIONAL |
+| **Última actualización** | 2026-01-11 |
+| **Último commit** | 3b00e9b |
+
+**Descripción:** Aplicación Streamlit que genera videos virales (TikTok/Reels/Shorts) usando 5 agentes de IA especializados y la metodología **Quantum Clic**.
 
 ---
 
-**Última actualización:** 2026-01-11  
-**Versión:** 2.9 (Google Veo Fully Configured + Service Account Active)  
-**Proyecto:** Video Factory AI (Quantum Clic)
+## � PROTOCOLO OBLIGATORIO
+
+Al finalizar **CUALQUIER** tarea de código:
+1. ✅ Actualizar este archivo (`CONTEXT.md`) con el nuevo estado
+2. ✅ Ejecutar `git add -A`, `git commit -m "mensaje"`, `git push`
+3. ✅ NO esperar a que el usuario lo pida
 
 ---
 
-## 📊 Resumen Técnico
+## 🛠️ STACK TECNOLÓGICO
 
-### Stack Tecnológico Completo
-
-| Componente | Tecnología | Versión | Estado |
-|------------|------------|---------|--------|
-| **Scripts** | Google Gemini 2.0 Flash | API v1.57.0 | ✅ Operacional |
-| **Video AI** | **Google Veo (Vertex AI)** | veo-001 | ✅ **OPERACIONAL** |
-| **Audio** | gTTS (Google TTS) | v2.5.4 | ✅ Operacional |
-| **Imágenes** | Together AI Flux-Schnell | Latest | ✅ Operacional |
-| **Video Editor** | MoviePy | v1.0.3 | ✅ Soporta Clips MP4 |
-| **PDF Bonos** | fpdf2 | v2.8.5 | ✅ Operacional |
+| Componente | Tecnología | Estado | Notas Críticas |
+|------------|------------|--------|----------------|
+| **Cerebro (Scripts)** | Gemini 2.0 Flash | ✅ OK | SDK: `google-genai` v1.57+ |
+| **Video AI** | Google Veo (Vertex AI) | ✅ OK | Modelo: `veo-001`, Service Account configurado |
+| **Imágenes** | Together AI Flux-Schnell | ✅ OK | Estilo: Industrial Realism |
+| **Audio/Voz** | gTTS (Google TTS) | ✅ OK | Voz: Español Latino neutro |
+| **Ensamblaje** | MoviePy | ✅ OK | ⚠️ **VERSIÓN 1.0.3 OBLIGATORIA** (NO 2.x) |
+| **PDF Bonos** | fpdf2 | ✅ OK | Mockups 3D para Hotmart |
 
 ---
 
-### Versiones Recientes
+## 🔑 API KEYS REQUERIDAS (en `.streamlit/secrets.toml`)
 
-| Versión | Fecha | Cambios Principales |
-|---------|-------|---------------------|
-| **2.9** | 2026-01-11 | ✅ Google Veo COMPLETAMENTE CONFIGURADO (Service Account JSON) |
-| **2.8** | 2026-01-11 | Integración Google Veo (Vertex AI) + Soporte Service Account |
-| **2.7** | 2026-01-11 | Bonos Premium PDF para Hotmart (Portadas 3D + Automation) |
-| **2.6** | 2026-01-11 | Humanización de Guiones (Natural, Posesivos, Anti-IA) |
+```toml
+GOOGLE_API_KEY = "..."           # Gemini 2.0 Flash
+TOGETHER_API_KEY = "..."         # Flux-Schnell (imágenes)
+DEEPGRAM_API_KEY = "..."         # Backup TTS
+ELEVENLABS_API_KEY = "..."       # Backup TTS premium
 
----
-
-### Características Críticas
-
-✅ **Generación de Video Cinemático (v2.9)**:
-- Integración con Google Veo vía Vertex AI **COMPLETAMENTE OPERACIONAL**.
-- Service Account JSON configurado en `secrets.toml`.
-- Selector Global en Sidebar: Imagen (Flux) vs Video (Veo).
-- Soporte para mezcla de clips MP4 en el ensamblaje MoviePy.
-
-✅ **Bonos Premium (v2.7)**:
-- 4 Guías PDF profesionales para Frutíferas.
-- Mockups 3D de portadas generados por IA.
-
-✅ **Sistema Multi-Producto**:
-- Soporte para Frutíferas, Marketing Digital y Fitness.
-- Templates dinámicos y hooks inteligentes por nicho.
+[GCP_SERVICE_ACCOUNT]            # Google Veo (Vertex AI)
+type = "service_account"
+project_id = "gen-lang-client-0706301797"
+# ... resto del JSON de la cuenta de servicio
+```
 
 ---
 
-## 🔑 CONFIGURACIÓN VEO (COMPLETADA ✅)
+## 📁 ARQUITECTURA DE ARCHIVOS
 
-El sistema ahora tiene credenciales activas:
-1. ✅ `GCP_SERVICE_ACCOUNT` configurado en `.streamlit/secrets.toml`.
-2. **Proyecto GCP:** `gen-lang-client-0706301797` (luz digital).
-3. **APIs Activas:** Vertex AI API, Cloud Storage.
-
-Para verificar: El sidebar muestra **"🎥 Video (Google Veo): ONLINE"**.
-
----
-
-## 📁 ESTRUCTURA CLAVE:
 ```
 appvideos/
-├── agents/
-│   ├── scriptwriter.py       (Gemini 2.0)
-│   ├── audio_generator.py    (gTTS)
-│   ├── visual_generator.py   (Flux)
-│   ├── veo_generator.py      (Google Veo ✅)
-│   └── video_editor.py       (MoviePy 1.0.3)
+├── app.py                        # 🎛️ ORQUESTADOR PRINCIPAL (4 fases)
+│
+├── agents/                       # 🤖 AGENTES DE IA
+│   ├── scriptwriter.py           # Gemini → Genera guiones (Ads Expansive)
+│   ├── audio_generator.py        # gTTS → Genera voz
+│   ├── visual_generator.py       # Flux → Genera imágenes
+│   ├── veo_generator.py          # Veo → Genera clips de video ✅
+│   └── video_editor.py           # MoviePy → Ensambla video final
+│
+├── .streamlit/
+│   └── secrets.toml              # 🔐 API Keys (git ignored)
+│
+├── .prompts/                     # 📝 Prompts de sistema detallados
+│   ├── ANTIGRAVITY_SYSTEM_PROMPT.md
+│   ├── GEMINI_GEM_SYSTEM_PROMPT.md
+│   └── PERPLEXITY_SYSTEM_PROMPT.md
+│
 ├── assets/
-│   ├── final_output/         (TikToks Listos)
-│   ├── generated_videos/     (Clips de Veo)
-│   └── bonos_pdf_final/      (Bonos Hotmart)
-└── app.py                    (Orquestador 4 fases)
+│   ├── final_output/             # Videos finales listos
+│   ├── generated_videos/         # Clips de Veo
+│   └── bonos_pdf_final/          # PDFs para Hotmart
+│
+└── config/
+    └── settings.py               # Configuraciones globales
 ```
 
-**Último commit**: Pendiente (actualizar después de git push)
+---
+
+## 🎬 FLUJO DE LA APLICACIÓN (4 FASES)
+
+```
+FASE 1: Estrategia
+│   └── Usuario define: Tema + Producto + Hook
+│
+FASE 2: Aprobación (Human-in-the-Loop)
+│   └── Edición manual de escenas y prompts visuales
+│
+FASE 3: Producción de Assets
+│   ├── Audio: gTTS genera narraciones
+│   └── Visual: Flux (imágenes) O Veo (videos)
+│
+FASE 4: Ensamblaje Final
+    └── MoviePy: Combina todo → Video MP4 descargable
+```
+
+---
+
+## 🎯 METODOLOGÍA QUANTUM CLIC
+
+### 1. ADS EXPANSIVE (Hook en 3 segundos)
+```
+PASO 1 - DOLOR:       "¿Tus plantas se mueren sin razón?"
+PASO 2 - CONSECUENCIA: "El 90% falla por el drenaje..."
+PASO 3 - INTRIGA:      "En mi guía, capítulo 3, lo explico..."
+```
+
+### 2. MOCKUPS (Industrial Realism)
+Vocabulario OBLIGATORIO para prompts visuales:
+```
+✅ USAR: Ultra-realistic, 50mm f/2.8, natural lighting, visible texture
+❌ EVITAR: cartoon, illustration, CGI, synthetic look
+```
+
+### 3. TSL (CTA Orgánica)
+```
+✅ BIEN: "Sígueme para más", "Link en bio"
+❌ MAL: "SUSCRÍBETE AHORA", "DALE LIKE"
+```
+
+### 4. HUMANIZACIÓN DE GUIONES
+```
+✅ USAR: "En mi guía...", "Te regalo 4 bonos de mi parte..."
+❌ EVITAR: "El capítulo 3 revela...", "descubre el secreto..."
+```
+
+---
+
+## �️ REGLAS CRÍTICAS (NO ROMPER)
+
+### ❌ NUNCA:
+- Actualizar MoviePy a versión 2.x (incompatible con decorator)
+- Cambiar de `google-genai` a `google-generativeai` (ya migrado)
+- Modificar estructura de carpetas `assets/`
+- Romper la arquitectura de agentes independientes
+- Subir `secrets.toml` a Git
+
+### ✅ SIEMPRE:
+- Usar rutas con `os.path.join()` (compatibilidad Windows/Linux)
+- Validar `is_ready()` antes de usar cualquier agente
+- Incluir traceback completo en errores
+- Actualizar `CONTEXT.md` después de cambios importantes
+- Hacer `git push` después de cada tarea completada
+
+---
+
+## � PATRONES COMUNES DE DEBUGGING
+
+| Error | Causa Probable | Solución |
+|-------|----------------|----------|
+| "Agent no está listo" | Falta API key | Verificar `secrets.toml` |
+| MoviePy timing error | Clip excede duración | `min(end, audio.duration - 0.1)` |
+| "Module not found" | Librería no instalada | `pip install -r requirements.txt` |
+| Veo credentials error | Service Account mal configurado | Verificar `[GCP_SERVICE_ACCOUNT]` en secrets |
+| Flux no genera imagen | Créditos agotados | Verificar cuenta Together AI |
+
+---
+
+## 📦 SISTEMA MULTI-PRODUCTO
+
+La app soporta múltiples productos con templates únicos:
+
+| Producto | Precio | Bonos | Hooks |
+|----------|--------|-------|-------|
+| 🍊 Frutíferas en Macetas | $7 | 4 | Drenaje, Dinero, Espacio, Tiempo |
+| 💼 Marketing Digital Pro | $27 | 5 | CTR, ROI, Audiencia, Escalamiento |
+| 💪 Fitness en Casa | $17 | 3 | Tiempo, Sin Gym, Grasa, Sostenible |
+
+---
+
+## 📊 HISTORIAL DE VERSIONES
+
+| Versión | Fecha | Cambios |
+|---------|-------|---------|
+| **2.9** | 2026-01-11 | ✅ Google Veo COMPLETAMENTE CONFIGURADO |
+| **2.8** | 2026-01-11 | Integración inicial Google Veo + Service Account |
+| **2.7** | 2026-01-11 | Bonos Premium PDF para Hotmart |
+| **2.6** | 2026-01-11 | Humanización de guiones (Anti-IA) |
+
+---
+
+## 🔗 REFERENCIAS RÁPIDAS
+
+- **Prompts detallados:** `.prompts/ANTIGRAVITY_SYSTEM_PROMPT.md`
+- **Metodología completa:** `.prompts/GEMINI_GEM_SYSTEM_PROMPT.md`
+- **Proyecto GCP:** `gen-lang-client-0706301797` (luz digital)
+- **Archivo de secretos:** `.streamlit/secrets.toml`
+
+---
+
+**Fin del documento. Este archivo es la fuente de verdad para cualquier IA que trabaje en el proyecto.**
