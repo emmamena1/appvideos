@@ -247,7 +247,7 @@ Y estaré listo para ayudarte con contexto completo de:
 ---
 
 **Última actualización:** 2026-01-11  
-**Versión:** 2.6 (Humanized Scripts + Multi-Product)  
+**Versión:** 2.7 (Hotmart Bonus PDFs + Humanized Scripts)  
 **Proyecto:** Video Factory AI (Quantum Clic)
 **Estado:** ✅ SISTEMA COMPLETO - Listo para Producción
 
@@ -260,54 +260,30 @@ Y estaré listo para ayudarte con contexto completo de:
 | Componente | Tecnología | Versión | Estado |
 |------------|------------|---------|--------|
 | **Scripts** | Google Gemini 2.0 Flash | API v1.57.0 | ✅ Operacional |
-| **Audio** | gTTS (Google TTS) | v2.5.4 | ✅ Migrado desde Edge TTS* |
+| **Audio** | gTTS (Google TTS) | v2.5.4 | ✅ Operacional |
 | **Imágenes** | Together AI Flux-Schnell | Latest | ✅ Operacional |
 | **Video** | MoviePy | v1.0.3 | ✅ Operacional |
-| **UI** | Streamlit | Latest | ✅ Operacional |
+| **PDF Bonos** | fpdf2 | v2.8.5 | ✅ Operacional |
 
-*Edge TTS fue reemplazado por bloqueos 403 de Microsoft
+---
 
-### Productos Activos (Sistema Multi-Producto)
+### Versiones Recientes
 
-| Producto | Precio | Bonos | Hooks Disponibles |
-|----------|--------|-------|-------------------|
-| 🍊 Frutíferas en Macetas | $7 | 4 | Drenaje, Dinero, Espacio, Tiempo |
-| 💼 Marketing Digital Pro | $27 | 5 | CTR, ROI, Audiencia, Escalamiento |
-| 💪 Fitness en Casa | $17 | 3 | Tiempo, Sin Gym, Grasa, Sostenible |
-
-### Historial de Versiones
-
-| Versión | Fecha | Cambios Principales | Commits |
-|---------|-------|---------------------|---------|
-| **2.6** | 2026-01-11 | Humanización de Guiones + Bonos | 0060238 |
-| 2.5 | 2026-01-11 | Multi-producto + gTTS audio | 307cb53, 0cca30e, 9247b29, 9be44e8 |
-| 2.4 | 2026-01-09 | Product template system | - |
+| Versión | Fecha | Cambios Principales |
+|---------|-------|---------------------|
+| **2.7** | 2026-01-11 | Bonos Premium PDF para Hotmart |
+| **2.6** | 2026-01-11 | Humanización de Guiones + Bonos |
 
 ### Características Implementadas
 
-✅ **Generación de Scripts**
-- Gemini 2.0 Flash con templates de producto
-- 3 modos: Manual, Automático nuevo, Paste Gemini
-- Inyección de contenido específico por producto
-- Hooks inteligentes mapeados a capítulos/módulos
-
-✅ **Sistema Multi-Producto**
-- Selector dinámico en UI
-- Templates únicos por producto
-- CTAs específicos y consistentes
-- Escalable a productos ilimitados
-
-✅ **Generación de Assets**
-- Audio: gTTS con acento mexicano natural
-- Imágenes: Flux-Schnell 8K cinematográfico
-- Video: MoviePy con subtítulos y música
+✅ **Generación de Bonos Premium (v2.7)**:
+- Portadas 3D profesionales generadas por IA.
+- Automatización PDF con `generate_pdfs.py`.
+- 4 guías completas para el nicho de frutíferas.
 
 ✅ **Humanización de Guiones (v2.6)**:
-- Reglas de lenguaje natural en español neutro.
-- Uso de posesivos: "mi guía", "mi manual", "mi programa".
-- Mención personal de bonos: "te regalo", "de mi parte", "incluyo".
-- Anti-IA patterns: Bloqueo de palabras como "revolucionario", "increíble", "secreto".
-- Storytelling auténtico basado en experiencias y datos específicos.
+- Lenguaje natural, posesivos y mención personal de bonos.
+- Anti-IA patterns (bloqueo de palabras clichés).
 
 ✅ **Flujo Completo**
 1. **Fase 1**: Input (Manual/Automático/Paste)
