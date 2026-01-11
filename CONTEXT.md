@@ -246,7 +246,108 @@ Y estaré listo para ayudarte con contexto completo de:
 
 ---
 
-**Última actualización:** 2026-01-09  
-**Versión:** 2.5 (Multi-Product System)  
+**Última actualización:** 2026-01-11  
+**Versión:** 2.5 (Multi-Product System + gTTS Audio)  
 **Proyecto:** Video Factory AI (Quantum Clic)
 **Estado:** ✅ SISTEMA COMPLETO - Listo para Producción
+
+---
+
+## 📊 Resumen Técnico del Proyecto
+
+### Stack Tecnológico Completo
+
+| Componente | Tecnología | Versión | Estado |
+|------------|------------|---------|--------|
+| **Scripts** | Google Gemini 2.0 Flash | API v1.57.0 | ✅ Operacional |
+| **Audio** | gTTS (Google TTS) | v2.5.4 | ✅ Migrado desde Edge TTS* |
+| **Imágenes** | Together AI Flux-Schnell | Latest | ✅ Operacional |
+| **Video** | MoviePy | v1.0.3 | ✅ Operacional |
+| **UI** | Streamlit | Latest | ✅ Operacional |
+
+*Edge TTS fue reemplazado por bloqueos 403 de Microsoft
+
+### Productos Activos (Sistema Multi-Producto)
+
+| Producto | Precio | Bonos | Hooks Disponibles |
+|----------|--------|-------|-------------------|
+| 🍊 Frutíferas en Macetas | $7 | 4 | Drenaje, Dinero, Espacio, Tiempo |
+| 💼 Marketing Digital Pro | $27 | 5 | CTR, ROI, Audiencia, Escalamiento |
+| 💪 Fitness en Casa | $17 | 3 | Tiempo, Sin Gym, Grasa, Sostenible |
+
+### Historial de Versiones
+
+| Versión | Fecha | Cambios Principales | Commits |
+|---------|-------|---------------------|---------|
+| **2.5** | 2026-01-11 | Multi-producto + gTTS audio | 307cb53, 0cca30e, 9247b29, 9be44e8 |
+| 2.4 | 2026-01-09 | Product template system | - |
+| 2.3 | 2026-01-08 | Modo automático 4 escenas | - |
+| 2.0 | 2026-01-07 | Migración a Gemini 2.0 Flash | - |
+
+### Características Implementadas
+
+✅ **Generación de Scripts**
+- Gemini 2.0 Flash con templates de producto
+- 3 modos: Manual, Automático nuevo, Paste Gemini
+- Inyección de contenido específico por producto
+- Hooks inteligentes mapeados a capítulos/módulos
+
+✅ **Sistema Multi-Producto**
+- Selector dinámico en UI
+- Templates únicos por producto
+- CTAs específicos y consistentes
+- Escalable a productos ilimitados
+
+✅ **Generación de Assets**
+- Audio: gTTS con acento mexicano natural
+- Imágenes: Flux-Schnell 8K cinematográfico
+- Video: MoviePy con subtítulos y música
+
+✅ **Flujo Completo**
+1. **Fase 1**: Input (Manual/Automático/Paste)
+2. **Fase 2**: Aprobación humana (editable)
+3. **Fase 3**: Generación paralela de assets
+4. **Fase 4**: Ensamblaje final de video
+
+### Problemas Resueltos
+
+| Problema | Solución | Fecha |
+|----------|----------|-------|
+| Edge TTS bloqueado 403 | Migración a gTTS | 2026-01-09 |
+| Asyncio conflictos Streamlit | Subprocess helper (pre-gTTS) | 2026-01-09 |
+| Falta de product templates | Sistema multi-producto | 2026-01-09 |
+| CTAs inconsistentes | Templates con CTAs fijos | 2026-01-09 |
+
+---
+
+## 🚀 Para Empezar
+
+**Requisitos**:
+```bash
+pip install google-genai==1.57.0 moviepy==1.0.3 gTTS==2.5.4 streamlit
+```
+
+**Configurar API Keys** en `.streamlit/secrets.toml`:
+```toml
+GOOGLE_API_KEY = "tu-api-key-gemini"
+TOGETHER_API_KEY = "tu-api-key-together"
+```
+
+**Ejecutar**:
+```bash
+streamlit run app.py
+```
+
+**Generar Video**:
+1. Seleccionar "🚀 Automático nuevo"
+2. Elegir producto (ej: Frutíferas en Macetas)
+3. Ingresar tema y hook
+4. Click "AUTO-GENERAR 4 ESCENAS"
+5. Aprobar y producir assets
+6. Descargar video final
+
+---
+
+**Desarrollado por**: Emmanuel  
+**GitHub**: [appvideos](https://github.com/emmamena1/appvideos)  
+**Último commit**: 9be44e8
