@@ -73,7 +73,7 @@ class VeoGeneratorAgent:
                 location=LOCATION,
                 credentials=credentials
             )
-            self.model_id = "veo-001"
+            self.model_id = "veo-2"  # Modelo correcto de Vertex AI (veo-001 no existe)
             print("DEBUG: Cliente Veo inicializado correctamente")
             
         except Exception as e:

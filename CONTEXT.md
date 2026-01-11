@@ -9,21 +9,24 @@
 | Campo | Valor |
 |-------|-------|
 | **Proyecto** | Video Factory AI (Quantum Clic) |
-| **Versión** | 2.9 |
-| **Estado** | ✅ SISTEMA COMPLETO Y OPERACIONAL |
+| **Versión** | 3.0 |
+| **Estado** | ⚠️ VEO REQUIERE ACCESO (ver nota abajo) |
 | **Última actualización** | 2026-01-11 |
-| **Último commit** | 3b00e9b |
+| **Último commit** | Pendiente |
 
 **Descripción:** Aplicación Streamlit que genera videos virales (TikTok/Reels/Shorts) usando 5 agentes de IA especializados y la metodología **Quantum Clic**.
 
 ---
 
-## � PROTOCOLO OBLIGATORIO
+## 📋 PROTOCOLO OBLIGATORIO (CRÍTICO)
 
-Al finalizar **CUALQUIER** tarea de código:
-1. ✅ Actualizar este archivo (`CONTEXT.md`) con el nuevo estado
-2. ✅ Ejecutar `git add -A`, `git commit -m "mensaje"`, `git push`
-3. ✅ NO esperar a que el usuario lo pida
+> **⚠️ REGLA DE ORO PARA CUALQUIER IA:**
+
+Al finalizar **CUALQUIER** tarea de código, SIN EXCEPCIÓN:
+1. ✅ Actualizar este archivo (`CONTEXT.md`) con el nuevo estado del sistema
+2. ✅ Ejecutar: `git add -A` → `git commit -m "descripción"` → `git push`
+3. ✅ **NO esperar** a que el usuario lo pida - hacerlo INMEDIATAMENTE
+4. ✅ Actualizar la versión si hubo cambios significativos
 
 ---
 
@@ -32,11 +35,15 @@ Al finalizar **CUALQUIER** tarea de código:
 | Componente | Tecnología | Estado | Notas Críticas |
 |------------|------------|--------|----------------|
 | **Cerebro (Scripts)** | Gemini 2.0 Flash | ✅ OK | SDK: `google-genai` v1.57+ |
-| **Video AI** | Google Veo (Vertex AI) | ✅ OK | Modelo: `veo-001`, Service Account configurado |
+| **Video AI** | Google Veo (Vertex AI) | ⚠️ VER NOTA | Modelo: `veo-2`, requiere acceso aprobado |
 | **Imágenes** | Together AI Flux-Schnell | ✅ OK | Estilo: Industrial Realism |
 | **Audio/Voz** | gTTS (Google TTS) | ✅ OK | Voz: Español Latino neutro |
 | **Ensamblaje** | MoviePy | ✅ OK | ⚠️ **VERSIÓN 1.0.3 OBLIGATORIA** (NO 2.x) |
 | **PDF Bonos** | fpdf2 | ✅ OK | Mockups 3D para Hotmart |
+
+### ⚠️ NOTA SOBRE GOOGLE VEO:
+El modelo `veo-2` requiere acceso especial aprobado por Google. Si aparece error 404 "model not found", significa que el proyecto GCP aún no tiene acceso. Se debe solicitar en: https://cloud.google.com/vertex-ai/docs/generative-ai/video/overview
+
 
 ---
 
