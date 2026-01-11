@@ -10,7 +10,9 @@ if not hasattr(PIL.Image, 'ANTIALIAS'):
 from agents.scriptwriter import ScriptWriterAgent
 from agents.audio_generator import AudioGeneratorAgent
 from agents.visual_generator import VisualGeneratorAgent
-from agents.video_editor import VideoEditorAgent  # NUEVO AGENTE - Fase 4
+from agents.video_editor import VideoEditorAgent
+from agents.veo_generator import VeoGeneratorAgent
+  # NUEVO AGENTE - Fase 4
 
 
 # --- SISTEMA MULTI-PRODUCTO ---
@@ -383,12 +385,20 @@ st.markdown("""
 # --- ESTADO DE LA SESIÓN ---
 if 'step' not in st.session_state:
     st.session_state['step'] = 1
+if 'veo_agent' not in st.session_state:
+    st.session_state.veo_agent = VeoGeneratorAgent()
+if 'use_video' not in st.session_state:
+    st.session_state.use_video = False
 if 'script_data' not in st.session_state:
     st.session_state['script_data'] = {}
 if 'assets_ready' not in st.session_state:
     st.session_state['assets_ready'] = False
 if 'final_video_path' not in st.session_state:
     st.session_state['final_video_path'] = None
+if 'audio_agent' not in st.session_state:
+    st.session_state.audio_agent = AudioGeneratorAgent()
+if 'visual_agent' not in st.session_state:
+    st.session_state.visual_agent = VisualGeneratorAgent()
 
 # --- BARRA LATERAL (OPS CENTER) ---
 with st.sidebar:
@@ -410,6 +420,11 @@ with st.sidebar:
         st.success("👁️ Visuals (Flux-Schnell): ONLINE")
     else:
         st.error("👁️ Visuals (Flux): OFFLINE")
+
+    if "GOOGLE_CLOUD_PROJECT" in st.secrets and "GOOGLE_APPLICATION_CREDENTIALS" in st.secrets:
+        st.success("🎥 Video (Google Veo): ONLINE")
+    else:
+        st.error("🎥 Video (Google Veo): OFFLINE")
 
     st.markdown("---")
     
@@ -727,12 +742,10 @@ elif st.session_state['step'] == 2:
         
         if submitted:
             # Verificación de pre-vuelo (agentes listos)
-            audio_agent = AudioGeneratorAgent()
-            visual_agent = VisualGeneratorAgent()
-            
-            if not audio_agent.is_ready():
+            # Agents are now initialized in session_state
+            if not st.session_state.audio_agent.is_ready():
                 st.error("❌ Edge TTS no disponible. Ejecuta: pip install edge-tts")
-            elif not visual_agent.is_ready():
+            elif not st.session_state.visual_agent.is_ready():
                 st.error("❌ VisualGeneratorAgent NO está listo. Verifica TOGETHER_API_KEY en .streamlit/secrets.toml")
             else:
                 # Todo OK, guardar cambios y avanzar
@@ -756,42 +769,30 @@ elif st.session_state['step'] == 3:
             st.session_state['step'] = 2
             st.rerun()
     else:
-        # Inicializar agentes
-        audio_agent = AudioGeneratorAgent()
-        visual_agent = VisualGeneratorAgent()
-        
-        # Barra de progreso
-        progress_bar = st.progress(0)
+        st.header("🎨 Fase 3: Producción de Assets")
+    
+    # 🆕 Selector de Modo Visual (Veo Integration)
+    st.info("💡 **Novedad**: Ahora puedes elegir entre generar imágenes estáticas o videos cinemáticos con Google Veo.")
+    visual_mode = st.radio(
+        "Modo de Generación Visual:",
+        ["🖼️ Imagen (Flux - Rápido)", "🎥 Video (Google Veo - Premium)"],
+        index=1 if st.session_state.use_video else 0,
+        help="El modo video usa tus créditos de Google Cloud y tarda más tiempo (~60s por escena)."
+    )
+    st.session_state.use_video = "Video" in visual_mode
+
+    if st.button("🚀 GENERAR / ACTUALIZAR TODOS LOS ASSETS"):
+        # Preparar contenedores
+        asset_progress = st.progress(0)
         status_text = st.empty()
+        
+        # Procesar escenas
+        scenes = st.session_state['script_data'].get('scenes', []) # Use script_data
+        total_steps = len(scenes) * 2
+        current_step = 0
         
         generated_assets = []
         errors = []
-        total_scenes = len(scenes)
-        
-        # 🎬 PROCESAR CADA ESCENA
-        for i, scene in enumerate(scenes):
-            scene_num = i + 1
-            status_text.markdown(f"### 🎬 Procesando Escena {scene_num}/{total_scenes}...")
-            
-            # Contenedor expandible para cada escena
-            with st.expander(f"Escena {scene_num} - En Producción", expanded=True):
-                col_audio, col_visual = st.columns(2)
-                
-                # 1️⃣ GENERAR AUDIO (Deepgram Aura)
-                with col_audio:
-                    st.markdown("**🎤 Generando Voz Neural (Edge TTS - Mexicana)...**")
-                    audio_file = f"scene_{scene_num}.mp3"
-                    audio_path = audio_agent.generate_narration(scene['narration'], audio_file)
-                    
-                    if audio_path:
-                        st.audio(audio_path)
-                        scene['audio_path'] = audio_path
-                        st.success(f"✅ Audio: {audio_file}")
-                    else:
-                        st.error(f"❌ Fallo en audio escena {scene_num}")
-                        errors.append(f"Audio escena {scene_num}")
-                        scene['audio_path'] = None
-
                 # 2️⃣ GENERAR IMAGEN (Together AI / Flux-Schnell)
                 with col_visual:
                     st.markdown("**🎨 Renderizando Imagen (Flux-Schnell Ultra HD)...**")

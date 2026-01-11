@@ -90,8 +90,29 @@ class VideoEditorAgent:
                 audio_clip = AudioFileClip(audio_path)
                 duration = audio_clip.duration + 0.2  # Buffer para transiciones suaves
                 
-                # 3. Crear video clip con efecto zoom
-                video_clip = self.create_zoom_clip(img_path, duration)
+                # 3. Crear el clip visual (Imagen o Video)
+                is_video = img_path.lower().endswith('.mp4')
+                
+                if is_video:
+                    # Cargar Video Clip
+                    v_clip = VideoFileClip(img_path)
+                    
+                    # Redimensionar al alto de 1920
+                    v_clip = v_clip.resize(height=1920)
+                    
+                    # Recortar al centro para 1080 de ancho
+                    vw, vh = v_clip.size
+                    video_clip = v_clip.crop(x1=vw/2 - 540, y1=0, width=1080, height=1920)
+                    
+                    # Ajustar duración si es necesario (el audio manda)
+                    if video_clip.duration < duration:
+                        # Si es corto, podemos loopear o simplemente extender el último cuadro
+                        video_clip = video_clip.set_duration(duration)
+                    else:
+                        video_clip = video_clip.set_duration(duration)
+                else:
+                    # Crear video clip con efecto zoom (para imágenes estáticas)
+                    video_clip = self.create_zoom_clip(img_path, duration)
                 
                 # 4. Crear subtítulos estilo Hormozi
                 txt_content = scene.get('narration', '')
@@ -109,7 +130,7 @@ class VideoEditorAgent:
                                 .set_position(('center', 1400))  # Posición inferior
                                 .set_duration(duration))
                     
-                    # Componer imagen + texto
+                    # Componer imagen/video + texto
                     video_clip = CompositeVideoClip([video_clip, txt_clip])
                     
                 except Exception as e:
@@ -118,6 +139,7 @@ class VideoEditorAgent:
                     pass
 
                 # 5. Asignar audio al video
+                # Si el original era video, quitamos su audio previo para poner la voz en off
                 video_clip = video_clip.set_audio(audio_clip)
                 clips.append(video_clip)
 
