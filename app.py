@@ -425,13 +425,18 @@ with st.sidebar:
         st.success("🎥 Video (Google Veo): ONLINE")
     else:
         st.error("🎥 Video (Google Veo): OFFLINE")
-        st.warning("⚠️ **GCloud SDK no detectado**")
-        st.markdown("""
-        Para activar Veo, necesitas instalar Google Cloud SDK:
-        1. [Descargar GCloud SDK](https://cloud.google.com/sdk/docs/install-sdk)
-        2. Abrir terminal y ejecutar:
-        `gcloud auth application-default login`
-        """)
+        with st.expander("🔑 Cómo activar Google Veo:", expanded=True):
+            st.markdown("""
+            **Opción A (Recomendada):**
+            Instala [GCloud SDK](https://cloud.google.com/sdk/docs/install-sdk) y ejecuta:
+            `gcloud auth application-default login`
+            
+            **Opción B (Sin instalar nada):**
+            1. Crea una **Service Account** en GCP Console.
+            2. Descarga el JSON de la llave.
+            3. Entra a `.streamlit/secrets.toml` y pega:
+            `GCP_SERVICE_ACCOUNT = { ... tu json ... }`
+            """)
 
     st.markdown("---")
     

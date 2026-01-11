@@ -21,14 +21,29 @@ class VeoGeneratorAgent:
         
         # Cliente GenAI configurado para Vertex AI
         try:
+            # Intentar obtener credenciales de st.secrets si existen
+            # Esto permite usar Veo sin instalar el GCloud SDK completo
+            credentials = None
+            if "GCP_SERVICE_ACCOUNT" in st.secrets:
+                import json
+                # Puede ser un path a un archivo o un dict con el JSON
+                creds_data = st.secrets["GCP_SERVICE_ACCOUNT"]
+                if isinstance(creds_data, str) and creds_data.endswith(".json"):
+                    credentials = creds_data
+                else:
+                    # Asumimos que es el contenido del JSON
+                    credentials = dict(creds_data)
+            
             self.client = genai.Client(
                 vertexai=True,
                 project=PROJECT_ID,
-                location=LOCATION
+                location=LOCATION,
+                credentials=credentials
             )
             self.model_id = "veo-001"
         except Exception as e:
-            st.error(f"❌ Error al inicializar Vertex AI Client: {e}")
+            # No mostrar error invasivo aquí, solo loggear
+            print(f"DEBUG: Error al inicializar Vertex AI Client: {e}")
             self.client = None
 
     def generate_video_clip(self, prompt: str, aspect_ratio: str = "9:16", duration: str = "5s") -> Optional[str]:
