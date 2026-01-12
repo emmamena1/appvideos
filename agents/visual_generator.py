@@ -54,7 +54,8 @@ class VisualGeneratorAgent:
 
             # ✨ MEJORA DE CALIDAD GENÉRICA (No fuerza estilo industrial)
             # El prompt del scriptwriter ya define el contexto visual
-            final_prompt = f"{prompt}, ultra-realistic, 8k, highly detailed, cinematic lighting, professional photography"
+            # IMPORTANTE: Prohibir texto para que las imágenes sean limpias
+            final_prompt = f"{prompt}, ultra-realistic, 8k, highly detailed, cinematic lighting, professional photography, NO TEXT, no words, no letters, no typography, no watermarks, clean image without any text overlays"
 
             # Generación con Flux Schnell (9:16 Vertical para Shorts)
             response = self.client.images.generate(
