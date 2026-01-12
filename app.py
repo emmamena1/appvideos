@@ -516,7 +516,22 @@ if st.session_state['step'] == 1:
     st.title("🚀 Planificador de Producción")
     st.markdown("Define el objetivo para activar la metodología **Quantum Clic** (Ads Expansive).")
     
-    # 🆕 SELECTOR DE MODO (ARRIBA DEL TODO)
+    # 🔗 GLOBAL: INVESTIGACIÓN POR URL (Pippit Logic)
+    with st.expander("🔗 Investigación por URL (Opcional - Pippit AI Logic)", expanded=False):
+        url_input = st.text_input("Pega la URL del producto (Amazon, Shopify, etc.):", placeholder="https://example.com/product")
+        if st.button("🔍 Extraer Datos del Producto", key="global_research_btn"):
+            if url_input:
+                with st.spinner("🤖 El Researcher Agent está analizando la página..."):
+                    data = st.session_state.researcher_agent.analyze_url(url_input)
+                    if "error" in data:
+                        st.error(f"❌ Error al analizar la URL: {data['error']}")
+                    else:
+                        st.session_state.url_data = data
+                        st.success("✅ Datos extraídos correctamente!")
+                        st.json(data)
+            else:
+                st.warning("⚠️ Ingresa una URL primero.")
+    
     st.markdown("---")
     modo = st.radio(
         "🎯 Modo de trabajo:",
@@ -598,21 +613,8 @@ Close-up of hands planting seeds in containers...""",
         # Mostrar info del producto seleccionado
         st.caption(f"**{producto_config['nombre']}** | Precio: {producto_config['precio']} | {producto_config['bonos']} bonos incluidos")
         
-        # 🔗 NUEVO: INVESTIGACIÓN POR URL (Pippit Logic)
-        with st.expander("🔗 Investigación por URL (Opcional - Pippit AI Logic)", expanded=False):
-            url_input = st.text_input("Pega la URL del producto (Amazon, Shopify, etc.):", placeholder="https://example.com/product")
-            if st.button("🔍 Extraer Datos del Producto"):
-                if url_input:
-                    with st.spinner("🤖 El Researcher Agent está analizando la página..."):
-                        data = st.session_state.researcher_agent.analyze_url(url_input)
-                        if "error" in data:
-                            st.error(f"❌ Error al analizar la URL: {data['error']}")
-                        else:
-                            st.session_state.url_data = data
-                            st.success("✅ Datos extraídos correctamente!")
-                            st.json(data)
-                else:
-                    st.warning("⚠️ Ingresa una URL primero.")
+        # Mostrar info del producto seleccionado
+        st.caption(f"**{producto_config['nombre']}** | Precio: {producto_config['precio']} | {producto_config['bonos']} bonos incluidos")
         
         # Pre-cargar datos si existen de la URL
         tema_default = st.session_state.url_data.get("dolor_principal", "Gente en depa sin jardín") if st.session_state.url_data else "Gente en depa sin jardín"
@@ -766,9 +768,17 @@ Close-up of hands planting seeds in containers...""",
         col1, col2 = st.columns(2)
         
         with col1:
-            # Usar el valor guardado primero, luego la plantilla como fallback
+            # Pre-cargar datos si existen de la URL (Pippit Logic)
+            tema_url = st.session_state.url_data.get("dolor_principal", "") if st.session_state.url_data else ""
+            producto_url = st.session_state.url_data.get("nombre_producto", "") if st.session_state.url_data else ""
+
+            # Usar el valor guardado primero, luego URL, luego la plantilla como fallback
             if st.session_state.topic_manual_value:
                 initial_topic = st.session_state.topic_manual_value
+            elif tema_url:
+                initial_topic = tema_url
+                # También actualizar el valor guardado si viene de URL
+                st.session_state.topic_manual_value = tema_url
             elif template_choice:
                 initial_topic = templates[template_choice]["topic"]
             else:
@@ -804,9 +814,10 @@ Close-up of hands planting seeds in containers...""",
                         st.rerun()
         
         with col2:
+            default_product = producto_url if producto_url else (templates[template_choice]["product"] if template_choice else "")
             product = st.text_input(
                 "🎯 Producto/Servicio a Vender",
-                value=templates[template_choice]["product"],
+                value=default_product,
                 placeholder="Ej: Consultoría de Meta Ads"
             )
 
