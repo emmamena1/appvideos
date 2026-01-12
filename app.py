@@ -625,19 +625,26 @@ Close-up of hands planting seeds in containers...""",
                 help="Describe la audiencia o situación objetivo",
                 key="tema_auto_input"
             )
+            # Actualizar session state con el valor actual del input
+            st.session_state.tema_auto_value = tema_auto
             
             # Botón para generar ideas
             if st.button("💡 Generar Ideas", key="ideas_btn_auto", help="Genera 5 ideas de temas virales con Gemini"):
                 with st.spinner("🧠 Generando ideas..."):
                     ideas = generate_ideas_tema(producto_key)
                     st.session_state.ideas_auto = ideas
+                    st.rerun()
             
             # Mostrar ideas como botones seleccionables
             if st.session_state.ideas_auto:
-                st.caption("**Ideas sugeridas (haz clic para usar):**")
+                st.caption("**💡 Haz clic en una idea para usarla:**")
                 for i, idea in enumerate(st.session_state.ideas_auto):
-                    if st.button(f"📝 {idea}", key=f"idea_auto_{i}", use_container_width=True):
-                        st.session_state.tema_auto_value = idea
+                    if st.button(f"👉 {idea}", key=f"idea_auto_{i}", use_container_width=True):
+                        # Limpiar las comillas si las tiene
+                        idea_limpia = idea.strip('"').strip("'")
+                        st.session_state.tema_auto_value = idea_limpia
+                        # Limpiar las ideas después de seleccionar
+                        st.session_state.ideas_auto = []
                         st.rerun()
         
         with col2:
@@ -748,27 +755,40 @@ Close-up of hands planting seeds in containers...""",
         col1, col2 = st.columns(2)
         
         with col1:
-            # Usar el valor de la plantilla si está seleccionada, o el valor guardado
-            initial_topic = templates[template_choice]["topic"] if template_choice else st.session_state.topic_manual_value
+            # Usar el valor guardado primero, luego la plantilla como fallback
+            if st.session_state.topic_manual_value:
+                initial_topic = st.session_state.topic_manual_value
+            elif template_choice:
+                initial_topic = templates[template_choice]["topic"]
+            else:
+                initial_topic = ""
+            
             topic = st.text_input(
                 "💡 Tema / Dolor del Cliente",
                 value=initial_topic,
                 placeholder="Ej: Mis anuncios de Facebook no convierten...",
                 key="topic_manual_input"
             )
+            # Sincronizar el valor del input con session_state
+            st.session_state.topic_manual_value = topic
             
             # Botón para generar ideas
             if st.button("💡 Generar Ideas", key="ideas_btn_manual", help="Genera 5 ideas de temas virales con Gemini"):
                 with st.spinner("🧠 Generando ideas..."):
                     ideas = generate_ideas_tema("general")
                     st.session_state.ideas_manual = ideas
+                    st.rerun()
             
             # Mostrar ideas como botones seleccionables
             if st.session_state.ideas_manual:
-                st.caption("**Ideas sugeridas (haz clic para usar):**")
+                st.caption("**💡 Haz clic en una idea para usarla:**")
                 for i, idea in enumerate(st.session_state.ideas_manual):
-                    if st.button(f"📝 {idea}", key=f"idea_manual_{i}", use_container_width=True):
-                        st.session_state.topic_manual_value = idea
+                    if st.button(f"👉 {idea}", key=f"idea_manual_{i}", use_container_width=True):
+                        # Limpiar las comillas si las tiene
+                        idea_limpia = idea.strip('"').strip("'")
+                        st.session_state.topic_manual_value = idea_limpia
+                        # Limpiar las ideas después de seleccionar
+                        st.session_state.ideas_manual = []
                         st.rerun()
         
         with col2:
