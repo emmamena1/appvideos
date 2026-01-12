@@ -25,13 +25,7 @@ class VisualGeneratorAgent:
     def enhance_visual_prompt(self, original_prompt: str, narration: str) -> str:
         """
         Usa Gemini para mejorar el prompt visual asegurando coherencia con la narración.
-        
-        Args:
-            original_prompt: Prompt visual original
-            narration: Texto de la narración correspondiente
-            
-        Returns:
-            str: Prompt mejorado con coherencia garantizada
+        Implementa Art Direction 2.0 (Nivel Pippit AI).
         """
         try:
             import google.genai as genai
@@ -44,23 +38,22 @@ class VisualGeneratorAgent:
             enhancement_prompt = f"""Eres un experto en prompts para generación de imágenes AI (Flux).
 
 NARRACIÓN DEL VIDEO: "{narration}"
-
 PROMPT VISUAL ORIGINAL: "{original_prompt}"
 
 Tu tarea es crear un prompt visual en INGLÉS que sea 100% coherente con la narración y que NO GENERE TEXTO.
 
 REGLAS DE ORO PARA EVITAR TEXTO:
-1. Si mencionas un libro, manual, guía o papel: descríbelo como "BLANK white cover", "unlabeled book", "plain white folder", "generic white booklet with no text".
-2. PROHIBIDO mencionar: "title", "cover design", "text", "words", "letters", "typography", "logo", "branding".
-3. Describe el objeto por su FORMA y COLOR físico, nunca por su contenido escrito.
-4. NUNCA uses la palabra "pots" sola (confunde con ollas), usa "plant pots" o "terracotta planters".
+1. Si mencionas un libro, manual, guía o papel: descríbelo como "completely BLANK white cover", "clean unprinted paper", "generic white booklet with no text whatsoever".
+2. PROHIBIDO mencionar: "title", "design", "label", "text", "words", "letters", "branding", "marketing logo".
+3. Describe el objeto por su FORMA física y TEXTURA (ej: "rough matte paper texture", "grainy terracotta surface").
 
-REGLAS DE ESCENA:
-- Describa una escena REAL y FÍSICA (balcones, jardines, manos reales).
-- NO dispositivos electrónicos (teléfonos, pantallas).
-- Estilo: Cinematic 8K photography, highly detailed, realistic textures.
+DIRECCIÓN DE ARTE CINEMATOGRÁFICA (NIVEL PROFESIONAL):
+- Iluminación: Inyecta "Rembrandt lighting", "golden hour volumetric god rays", "global illumination", o "cinematic soft shadows".
+- Composición: Usa "rule of thirds", "shallow depth of field", "bokeh background", "macro photography detail".
+- Texturas: Describe poros de la piel, vetas de las hojas, humedad en la tierra, reflejos naturales en el agua. Evita que la imagen se vea "lisa" o "plástica".
+- NUNCA uses la palabra "pots" sola; usa "terracotta plant pots" o "heavy garden planters".
 
-Responde SOLO con el prompt final en inglés, agregando al final: ", ultra-realistic, 8k, cinematic lighting, NO TEXT, no words, no letters, no labels, blank surfaces"
+Responde SOLO con el prompt final en inglés, asegurando que empiece por: "A professional cinematic photograph of...". Agrega al final: ", 8k, highly detailed, sharp focus, RAW photo quality, Kodak Portra 400 style, NO TEXT, no words, no letters, no labels, blank surfaces"
 """
 
             response = client.models.generate_content(
@@ -70,7 +63,6 @@ Responde SOLO con el prompt final en inglés, agregando al final: ", ultra-reali
             
             enhanced = response.text.strip()
             enhanced = enhanced.strip('"').strip("'")
-            
             return enhanced
             
         except Exception as e:

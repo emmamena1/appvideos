@@ -262,68 +262,31 @@ Hook enfocado en: {hook}
 Producto: {producto}
 Referencia sugerida para usar: {capitulo_sugerido}
 
-🎭 REGLAS DE HUMANIZACIÓN (CRÍTICO):
+SISTEMA DE COPYWRITING PROFESIONAL (NIVEL 99%):
 
-1. LENGUAJE NATURAL EN ESPAÑOL (NEUTRO):
-   - Tono conversacional, cercano y auténtico. Evita regionalismos marcados.
-   - Usa POSESIVOS al mencionar el contenido: "mi guía", "mi manual", "mi curso", "mi programa".
-   - Ejemplos:
-     * ❌ MAL: "El capítulo 3 explica..."
-     * ✅ BIEN: "En mi guía, en el capítulo 3, explico..."
-     * ✅ BIEN: "Lo que descubrí y puse en mi manual..."
+1. FRAMEWORK PAS (ESTRICTO):
+   - ESCENA 1 (Problema/Hook): Empieza con un "Scroll-Stopper". Una pregunta dolorosa o una estadística que detenga el scroll instantáneamente.
+   - ESCENA 2 (Agitación): Pon sal en la herida. Explica por qué el problema es frustrante, costoso o vergonzoso. Haz que sientan la necesidad de cambiar.
+   - ESCENA 3 (Solución): Presenta "{capitulo_sugerido}" como el puente entre su dolor actual y el resultado deseado. Usa posesivos ("mi guía", "mi manual").
+   - ESCENA 4 (Acción): CTA directo y humano con reducción de riesgo (bonos incluidos).
 
-2. 🎁 HUMANIZACIÓN DE LOS BONOS (PERSONAL):
-   - No digas "+ 4 bonos" como un robot.
-   - Di que SON TUYOS y que LOS REGALAS para ayudar.
-   - Ejemplos:
-     * ✅ "Te regalo 4 guías extra de mi parte"
-     * ✅ "Incluyo 4 bonos para ayudarte a acelerar el proceso"
-     * ✅ "Te llevas 4 regalos gratis en mi manual"
+2. LENGUAJE NATURAL Y PERSUASIVO:
+   - Usa tono de "amigo experto". Nada de lenguaje corporativo.
+   - Prohibido: revolucionario, increíble, secreto, descubre, domina, maximiza.
+   - Usa: "esto funciona", "resulta que", "encontré la forma de", "después de fallar mil veces encontré esto".
 
-3. ❌ PALABRAS PROHIBIDAS (detección IA):
-   NUNCA uses: revolucionario, increíble, secreto, descubre, desbloquear,
-   transformar, domina, maximiza, "el poder de", "imagina", "técnica avanzada"
-   
-   ✅ Usa en su lugar: "esto funciona", "probé y funciona", "encontré que",
-   "en mi experiencia", "resulta que"
-
-4. STORYTELLING AUTÉNTICO:
-   - Experiencias: "Probé esto...", "Me pasó que..."
-   - Datos específicos: "90% falla por...", "3 de 4 personas..."
-   - Descubrimientos: "Resulta que...", "Lo que encontré es..."
-
-5. FLOW CONVERSACIONAL:
-   - Escena 1: Pregunta directa o situación relatable.
-   - Escena 2: Explica el problema de forma conversacional.
-   - Escena 3: Solución con referencia NATURAL al contenido (usa posesivos).
-   - Escena 4: Oferta humana con mención personal de los bonos.
-
-EJEMPLOS DE NARRACIÓN CORRECTA:
-
-ESCENA 1 (Hook):
-❌ "¿Quieres descubrir el secreto del drenaje?"
-✅ "¿Te pasa que se mueren las plantas sin razón aparente?"
-✅ "3 de cada 4 macetas fallan por ESTO"
-
-ESCENA 3 (Solución con referencia NATURAL):
-❌ "El Capítulo 3 revela la técnica definitiva"
-✅ "En mi guía, capítulo 3, te muestro cómo arreglarlo en 2 pasos"
-✅ "Lo explico en mi manual (capítulo 3): drenaje perfecto y simple"
-
-ESCENA 4 (Oferta Humana):
-❌ "Manual $7 + 4 bonos. Link en bio."
-✅ "Mi guía completa ($7) incluye 4 regalos de mi parte. Link en bio"
-✅ "Te llevas mi manual por $7 y te regalo 4 guías extra. Link en bio"
+3. STORYTELLING:
+   - "3 de cada 4 personas fallan en esto por una sola razón..."
+   - "Ahorré $200 al mes simplemente cambiando el capítulo 3..."
+   - "Mi mayor error fue no saber lo que explico en mi manual..."
 
 GENERA EXACTAMENTE 4 ESCENAS (45 segundos total):
 
-ESTRUCTURA ESTRICTA:
-- Escena 1 (0-3s): Hook natural - Pregunta o dato impactante (MAX 12 palabras español)
-- Escena 2 (3-20s): Problema conversacional - Menciona datos/experiencia (MAX 15 palabras español)
-- Escena 3 (20-38s): Solución con referencia NATURAL a "{capitulo_sugerido}"
-  * USA POSESIVOS: "en mi guía/manual/curso/programa" (MAX 15 palabras español)
-- Escena 4 (38-45s): Oferta humana con mención personal de los 4 bonos.
-  * USA: "te regalo", "incluyo", "de mi parte". (MAX 15 palabras español)
+ESTRUCTURA TÉCNICA:
+- Escena 1 (0-3s): PAS - Problema/Hook de alto impacto (MAX 12 palabras)
+- Escena 2 (3-20s): PAS - Agitación del dolor con datos o experiencias (MAX 18 palabras)
+- Escena 3 (20-38s): PAS - Solución natural mencionando "{capitulo_sugerido}" (MAX 18 palabras)
+- Escena 4 (38-45s): PAS - CTA Humano con bonos de regalo (MAX 15 palabras)
 
 FORMATO DE RESPUESTA (ESTRICTO):
 ESCENA 1: [texto natural español] | [prompt imagen INGLÉS cinematográfico]
@@ -331,31 +294,31 @@ ESCENA 2: [texto natural español] | [prompt imagen INGLÉS cinematográfico]
 ESCENA 3: [referencia natural + {capitulo_sugerido}] | [prompt imagen INGLÉS cinematográfico]
 ESCENA 4: [oferta humana personal con bonos] | [prompt imagen INGLÉS call-to-action]
 
-🚨 REGLAS CRÍTICAS PARA PROMPTS VISUALES (OBLIGATORIO):
+REGLAS CRITICAS PARA PROMPTS VISUALES (OBLIGATORIO):
 
-❌ PROHIBIDO EN PROMPTS VISUALES:
+PROHIBIDO EN PROMPTS VISUALES:
 - NO teléfonos, smartphones, tablets, laptops, pantallas
 - NO interfaces de usuario, apps, botones, UI elements
 - NO texto, letras, palabras, tipografía, logos
 - NO mockups digitales ni gráficos abstractos
 - NO manos sosteniendo dispositivos electrónicos
 
-✅ OBLIGATORIO EN PROMPTS VISUALES:
+OBLIGATORIO EN PROMPTS VISUALES:
 - SOLO escenas reales, físicas y tangibles relacionadas con el tema: {tema}
 - Personas REALES haciendo actividades relacionadas con el producto
 - Objetos físicos: plantas, macetas, tierra, frutas, herramientas de jardinería (si es sobre plantas)
 - Escenarios reales: balcones, terrazas, patios, interiores de casa, jardines
 - Estilo: "Cinematic 8K photography, depth of field, professional lighting, natural colors, ultra-realistic, NO TEXT, no words, no letters"
 
-EJEMPLOS DE PROMPTS VISUALES CORRECTOS (para tema de plantas):
-✅ "Close-up of hands planting a small lemon tree in a terracotta pot on a sunny balcony, cinematic 8K photography, depth of field, natural lighting, NO TEXT"
-✅ "A woman smiling widely, holding a BLANK white book with NO TEXT on the cover, standing next to lush tomato plants, sunny garden setting, 8k detailed, ultra-realistic"
-✅ "Close-up of a PLAIN white folder with NO LABELS or writing, placed on a wooden gardening table next to seeds and soil, cinematic lighting, ultra-realistic"
+EJEMPLOS DE PROMPTS VISUALES CORRECTOS:
+- "Close-up of hands planting a small lemon tree in a terracotta pot on a sunny balcony, cinematic 8K photography, depth of field, natural lighting, NO TEXT"
+- "A woman smiling widely, holding a BLANK white book with NO TEXT on the cover, standing next to lush tomato plants, sunny garden setting, 8k detailed, ultra-realistic"
+- "Close-up of a PLAIN white folder with NO LABELS or writing, placed on a wooden gardening table next to seeds and soil, cinematic lighting, ultra-realistic"
 
-EJEMPLOS INCORRECTOS (NUNCA HAGAS ESTO):
-❌ "Hand holding smartphone showing gardening app..."
-❌ "Digital mockup of ebook cover with title 'Tomato Guide'..."
-❌ "Phone screen displaying product offer with text..."
+EJEMPLOS INCORRECTOS:
+- "Hand holding smartphone showing gardening app..."
+- "Digital mockup of ebook cover with title 'Tomato Guide'..."
+- "Phone screen displaying product offer with text..."
 """
 
     try:
@@ -436,20 +399,20 @@ def parse_gemini_guion(texto: str) -> list:
     
     return escenas
 
-# --- CONFIGURACIÓN DE PÁGINA ---
+# --- CONFIGURACION DE PAGINA ---
 st.set_page_config(
     page_title="Video Factory AI | Quantum Clic",
     page_icon="🎬",
     layout="wide"
 )
 
-# --- ESTILOS CSS INDUSTRIAL DARK ---
+# --- ESTILOS CSS ---
 st.markdown("""
 <style>
-    .stApp { background-color: #0e1117; color: #c9d1d9; }
+    .stApp { background-color: #111111; color: #ffffff; }
     .stButton > button { width: 100%; border-radius: 4px; font-weight: bold; }
     .success-box { padding: 10px; background-color: #0f2e1a; border: 1px solid #238636; border-radius: 5px; }
-    h1, h2, h3 { color: #f0f6fc; font-family: 'Segoe UI', sans-serif; }
+    h1, h2, h3 { color: #ffffff; font-family: 'Segoe UI', sans-serif; }
 </style>
 """, unsafe_allow_html=True)
 
