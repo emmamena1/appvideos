@@ -613,9 +613,6 @@ Close-up of hands planting seeds in containers...""",
         # Mostrar info del producto seleccionado
         st.caption(f"**{producto_config['nombre']}** | Precio: {producto_config['precio']} | {producto_config['bonos']} bonos incluidos")
         
-        # Mostrar info del producto seleccionado
-        st.caption(f"**{producto_config['nombre']}** | Precio: {producto_config['precio']} | {producto_config['bonos']} bonos incluidos")
-        
         # Pre-cargar datos si existen de la URL
         tema_default = st.session_state.url_data.get("dolor_principal", "Gente en depa sin jardín") if st.session_state.url_data else "Gente en depa sin jardín"
         producto_default = st.session_state.url_data.get("nombre_producto", producto_key) if st.session_state.url_data else producto_key
@@ -626,9 +623,11 @@ Close-up of hands planting seeds in containers...""",
         if 'tema_auto_value' not in st.session_state:
             st.session_state.tema_auto_value = tema_default
         
-        # Actualizar tema_auto_value si hay nuevos datos de URL
-        if st.session_state.url_data and st.session_state.tema_auto_value == "Gente en depa sin jardín":
-            st.session_state.tema_auto_value = tema_default
+        # Actualizar tema_auto_value si hay nuevos datos de URL y el tema es el default
+        if st.session_state.url_data:
+            new_tema = st.session_state.url_data.get("dolor_principal", "Gente en depa sin jardín")
+            if st.session_state.tema_auto_value != new_tema:
+                st.session_state.tema_auto_value = new_tema
         
         col1, col2 = st.columns(2)
         
@@ -769,16 +768,14 @@ Close-up of hands planting seeds in containers...""",
         
         with col1:
             # Pre-cargar datos si existen de la URL (Pippit Logic)
-            tema_url = st.session_state.url_data.get("dolor_principal", "") if st.session_state.url_data else ""
-            producto_url = st.session_state.url_data.get("nombre_producto", "") if st.session_state.url_data else ""
+            if st.session_state.url_data:
+                tema_url_new = st.session_state.url_data.get("dolor_principal", "")
+                if st.session_state.topic_manual_value != tema_url_new and tema_url_new:
+                    st.session_state.topic_manual_value = tema_url_new
 
-            # Usar el valor guardado primero, luego URL, luego la plantilla como fallback
+            # Usar el valor guardado primero, luego la plantilla como fallback
             if st.session_state.topic_manual_value:
                 initial_topic = st.session_state.topic_manual_value
-            elif tema_url:
-                initial_topic = tema_url
-                # También actualizar el valor guardado si viene de URL
-                st.session_state.topic_manual_value = tema_url
             elif template_choice:
                 initial_topic = templates[template_choice]["topic"]
             else:

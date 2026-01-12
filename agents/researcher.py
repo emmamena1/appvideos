@@ -54,18 +54,23 @@ class ResearcherAgent:
         - ganchos_sugeridos (lista)
         """
         prompt = f"""Eres un experto en investigación de mercado y copywriting. 
-Analiza el siguiente contenido de una página de producto y extrae la información clave para crear videos de TikTok.
+Analiza el siguiente contenido de una página y extrae la información clave de MARKETING.
+
+OBLIGATORIO:
+1. Ignora la plataforma en sí (ej: si es TikTok, no digas que el producto es TikTok). 
+2. Busca el VALOR REAL: ¿De qué habla el video/página? ¿Qué producto vende? ¿Qué problema resuelve?
+3. Si es un video de redes sociales, analiza la descripción y el contenido para encontrar el "gancho" y el "dolor".
 
 CONTENIDO DE LA PÁGINA:
 {page_content[:5000]}
 
 RESPONDE ÚNICAMENTE EN FORMATO JSON CON ESTA ESTRUCTURA:
 {{
-  "nombre_producto": "Nombre corto",
-  "dolor_principal": "El mayor problema que resuelve",
+  "nombre_producto": "Qué se vende/ofrece (No el nombre de la red social)",
+  "dolor_principal": "El mayor problema que resuelve el contenido",
   "beneficios": ["beneficio 1", "beneficio 2"],
   "ganchos_sugeridos": ["Gancho 1", "Gancho 2"],
-  "precio_estimado": "$0.00"
+  "precio_estimado": "Si aplica, sino 'N/A'"
 }}
 """
         try:
