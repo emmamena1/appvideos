@@ -331,10 +331,31 @@ ESCENA 2: [texto natural español] | [prompt imagen INGLÉS cinematográfico]
 ESCENA 3: [referencia natural + {capitulo_sugerido}] | [prompt imagen INGLÉS cinematográfico]
 ESCENA 4: [oferta humana personal con bonos] | [prompt imagen INGLÉS call-to-action]
 
-IMPORTANTE PARA PROMPTS VISUALES:
-- Estilo obligatorio: "Cinematic 8K photography, depth of field, professional lighting"
-- Incluir elementos relevantes al producto.
-- Composición: Ultra-realistic, natural colors, high resolution.
+🚨 REGLAS CRÍTICAS PARA PROMPTS VISUALES (OBLIGATORIO):
+
+❌ PROHIBIDO EN PROMPTS VISUALES:
+- NO teléfonos, smartphones, tablets, laptops, pantallas
+- NO interfaces de usuario, apps, botones, UI elements
+- NO texto, letras, palabras, tipografía, logos
+- NO mockups digitales ni gráficos abstractos
+- NO manos sosteniendo dispositivos electrónicos
+
+✅ OBLIGATORIO EN PROMPTS VISUALES:
+- SOLO escenas reales, físicas y tangibles relacionadas con el tema: {tema}
+- Personas REALES haciendo actividades relacionadas con el producto
+- Objetos físicos: plantas, macetas, tierra, frutas, herramientas de jardinería (si es sobre plantas)
+- Escenarios reales: balcones, terrazas, patios, interiores de casa, jardines
+- Estilo: "Cinematic 8K photography, depth of field, professional lighting, natural colors, ultra-realistic, NO TEXT, no words, no letters"
+
+EJEMPLOS DE PROMPTS VISUALES CORRECTOS (para tema de plantas):
+✅ "Close-up of hands planting a small lemon tree in a terracotta pot on a sunny balcony, cinematic 8K photography, depth of field, natural lighting, NO TEXT"
+✅ "Wide shot of a happy person smiling next to thriving potted fruit trees on apartment balcony, golden hour lighting, ultra-realistic, NO TEXT"
+✅ "Macro photography of fresh oranges growing on a small potted tree, water droplets, professional lighting, 8K detail, NO TEXT"
+
+EJEMPLOS INCORRECTOS (NUNCA HAGAS ESTO):
+❌ "Hand holding smartphone showing gardening app..."
+❌ "Digital mockup of ebook cover..."
+❌ "Phone screen displaying product offer..."
 """
 
     try:
