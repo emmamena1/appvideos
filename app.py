@@ -618,15 +618,13 @@ Close-up of hands planting seeds in containers...""",
         col1, col2 = st.columns(2)
         
         with col1:
+            # SIN key para que value sea respetado en cada rerun
             tema_auto = st.text_input(
                 "📌 Tema del Video:",
                 value=st.session_state.tema_auto_value,
                 placeholder="Ej: Personas con poco espacio en casa",
-                help="Describe la audiencia o situación objetivo",
-                key="tema_auto_input"
+                help="Describe la audiencia o situación objetivo"
             )
-            # Actualizar session state con el valor actual del input
-            st.session_state.tema_auto_value = tema_auto
             
             # Botón para generar ideas
             if st.button("💡 Generar Ideas", key="ideas_btn_auto", help="Genera 5 ideas de temas virales con Gemini"):
@@ -763,14 +761,15 @@ Close-up of hands planting seeds in containers...""",
             else:
                 initial_topic = ""
             
+            # Usar session_state si hay un valor guardado de las ideas
+            display_topic = st.session_state.topic_manual_value if st.session_state.topic_manual_value else initial_topic
+            
+            # SIN key para que value sea respetado en cada rerun
             topic = st.text_input(
                 "💡 Tema / Dolor del Cliente",
-                value=initial_topic,
-                placeholder="Ej: Mis anuncios de Facebook no convierten...",
-                key="topic_manual_input"
+                value=display_topic,
+                placeholder="Ej: Mis anuncios de Facebook no convierten..."
             )
-            # Sincronizar el valor del input con session_state
-            st.session_state.topic_manual_value = topic
             
             # Botón para generar ideas
             if st.button("💡 Generar Ideas", key="ideas_btn_manual", help="Genera 5 ideas de temas virales con Gemini"):
