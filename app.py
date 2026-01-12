@@ -12,6 +12,7 @@ from agents.audio_generator import AudioGeneratorAgent
 from agents.visual_generator import VisualGeneratorAgent
 from agents.video_editor import VideoEditorAgent
 from agents.veo_generator import VeoGeneratorAgent
+from agents.researcher import ResearcherAgent
   # NUEVO AGENTE - Fase 4
 
 
@@ -433,6 +434,10 @@ if 'audio_agent' not in st.session_state:
     st.session_state.audio_agent = AudioGeneratorAgent()
 if 'visual_agent' not in st.session_state:
     st.session_state.visual_agent = VisualGeneratorAgent()
+if 'researcher_agent' not in st.session_state:
+    st.session_state.researcher_agent = ResearcherAgent()
+if 'url_data' not in st.session_state:
+    st.session_state.url_data = None
 
 # --- BARRA LATERAL (OPS CENTER) ---
 with st.sidebar:
@@ -593,11 +598,35 @@ Close-up of hands planting seeds in containers...""",
         # Mostrar info del producto seleccionado
         st.caption(f"**{producto_config['nombre']}** | Precio: {producto_config['precio']} | {producto_config['bonos']} bonos incluidos")
         
+        # 🔗 NUEVO: INVESTIGACIÓN POR URL (Pippit Logic)
+        with st.expander("🔗 Investigación por URL (Opcional - Pippit AI Logic)", expanded=False):
+            url_input = st.text_input("Pega la URL del producto (Amazon, Shopify, etc.):", placeholder="https://example.com/product")
+            if st.button("🔍 Extraer Datos del Producto"):
+                if url_input:
+                    with st.spinner("🤖 El Researcher Agent está analizando la página..."):
+                        data = st.session_state.researcher_agent.analyze_url(url_input)
+                        if "error" in data:
+                            st.error(f"❌ Error al analizar la URL: {data['error']}")
+                        else:
+                            st.session_state.url_data = data
+                            st.success("✅ Datos extraídos correctamente!")
+                            st.json(data)
+                else:
+                    st.warning("⚠️ Ingresa una URL primero.")
+        
+        # Pre-cargar datos si existen de la URL
+        tema_default = st.session_state.url_data.get("dolor_principal", "Gente en depa sin jardín") if st.session_state.url_data else "Gente en depa sin jardín"
+        producto_default = st.session_state.url_data.get("nombre_producto", producto_key) if st.session_state.url_data else producto_key
+        
         # Inicializar session_state para ideas si no existe
         if 'ideas_auto' not in st.session_state:
             st.session_state.ideas_auto = []
         if 'tema_auto_value' not in st.session_state:
-            st.session_state.tema_auto_value = "Gente en depa sin jardín"
+            st.session_state.tema_auto_value = tema_default
+        
+        # Actualizar tema_auto_value si hay nuevos datos de URL
+        if st.session_state.url_data and st.session_state.tema_auto_value == "Gente en depa sin jardín":
+            st.session_state.tema_auto_value = tema_default
         
         col1, col2 = st.columns(2)
         
@@ -632,7 +661,7 @@ Close-up of hands planting seeds in containers...""",
         with col2:
             producto_auto = st.text_input(
                 "🎯 Producto/Servicio:",
-                value=producto_config['precio'],  # Pre-llenar con precio del producto
+                value=producto_default,
                 placeholder=f"Ej: {producto_config['nombre'][:30]}...",
                 help="¿Qué estás vendiendo?"
             )

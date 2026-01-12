@@ -9,10 +9,10 @@
 | Campo | Valor |
 |-------|-------|
 | **Proyecto** | Video Factory AI (Quantum Clic) |
-| **Versión** | 3.1 |
-| **Estado** | ✅ OPERACIONAL (Flux) • ⚠️ VEO pendiente acceso |
+| **Versión** | 3.2 |
+| **Estado** | ✅ OPERACIONAL (Flux + Art Direction 2.0) |
 | **Última actualización** | 2026-01-11 |
-| **Último commit** | Pendiente |
+| **Último commit** | d8c0bd9 |
 
 **Descripción:** Aplicación Streamlit que genera videos virales (TikTok/Reels/Shorts) usando 5 agentes de IA especializados y la metodología **Quantum Clic**.
 
@@ -126,8 +126,8 @@ PASO 3 - INTRIGA:      "En mi guía, capítulo 3, lo explico..."
 ### 2. MOCKUPS (Industrial Realism)
 Vocabulario OBLIGATORIO para prompts visuales:
 ```
-✅ USAR: Ultra-realistic, 50mm f/2.8, natural lighting, visible texture
-❌ EVITAR: cartoon, illustration, CGI, synthetic look
+✅ USAR: Rembrandt lighting, golden hour volumetric god rays, global illumination, shallow depth of field, RAW photo quality.
+❌ EVITAR: cartoon, illustration, smooth AI skin, plastic textures, text overlays.
 ```
 
 ### 3. TSL (CTA Orgánica)
@@ -138,8 +138,8 @@ Vocabulario OBLIGATORIO para prompts visuales:
 
 ### 4. HUMANIZACIÓN DE GUIONES
 ```
-✅ USAR: "En mi guía...", "Te regalo 4 bonos de mi parte..."
-❌ EVITAR: "El capítulo 3 revela...", "descubre el secreto..."
+✅ USAR: PAS Framework (Problem-Agitation-Solution), "En mi guía...", "Te regalo 4 bonos de mi parte..."
+❌ EVITAR: "El capítulo 3 revela...", "descubre el secreto...", lenguaje corporativo o robótico.
 ```
 
 ---
@@ -190,10 +190,9 @@ La app soporta múltiples productos con templates únicos:
 
 | Versión | Fecha | Cambios |
 |---------|-------|---------|
+| **3.2** | 2026-01-11 | ✅ Art Direction 2.0 + PAS Framework (Pippit Quality) |
+| **3.1** | 2026-01-11 | ✅ Generador de Ideas + Fix Infinite Loop |
 | **2.9** | 2026-01-11 | ✅ Google Veo COMPLETAMENTE CONFIGURADO |
-| **2.8** | 2026-01-11 | Integración inicial Google Veo + Service Account |
-| **2.7** | 2026-01-11 | Bonos Premium PDF para Hotmart |
-| **2.6** | 2026-01-11 | Humanización de guiones (Anti-IA) |
 
 ---
 
