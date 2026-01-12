@@ -21,6 +21,65 @@ class VisualGeneratorAgent:
     def is_ready(self):
         """Verifica si el agente está listo."""
         return self.client is not None
+    
+    def enhance_visual_prompt(self, original_prompt: str, narration: str) -> str:
+        """
+        Usa Gemini para mejorar el prompt visual asegurando coherencia con la narración.
+        
+        Args:
+            original_prompt: Prompt visual original
+            narration: Texto de la narración correspondiente
+            
+        Returns:
+            str: Prompt mejorado con coherencia garantizada
+        """
+        try:
+            import google.genai as genai
+            
+            if "GOOGLE_API_KEY" not in st.secrets:
+                return original_prompt
+            
+            client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
+            
+            enhancement_prompt = f"""Eres un experto en prompts para generación de imágenes AI.
+
+NARRACIÓN DEL VIDEO: "{narration}"
+
+PROMPT VISUAL ORIGINAL: "{original_prompt}"
+
+Tu tarea es mejorar el prompt visual para que:
+1. Sea 100% coherente con la narración
+2. Describa una escena REAL y FÍSICA (no dispositivos electrónicos)
+3. NO incluya texto, letras, palabras, UI, pantallas, teléfonos
+4. Sea específico y detallado para evitar ambigüedades
+
+REGLAS ESTRICTAS:
+- Si la narración habla de PLANTAS/HUERTO: la imagen DEBE mostrar plantas reales, macetas con tierra, hojas verdes, frutas
+- Si habla de PROBLEMAS: mostrar expresión preocupada de persona junto a plantas marchitas
+- Si habla de SOLUCIÓN: mostrar plantas saludables, persona sonriendo con su huerto
+- NUNCA uses la palabra "pots" sola (confunde con ollas), usa "plant pots" o "flower pots" o "terracotta planters"
+- Agregar siempre: "ultra-realistic photography, 8K, cinematic lighting, NO TEXT, no words, no letters"
+
+Responde SOLO con el prompt mejorado en inglés, nada más:"""
+
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=enhancement_prompt
+            )
+            
+            enhanced = response.text.strip()
+            # Limpiar comillas si las tiene
+            enhanced = enhanced.strip('"').strip("'")
+            
+            print(f"DEBUG: Prompt original: {original_prompt[:50]}...")
+            print(f"DEBUG: Prompt mejorado: {enhanced[:50]}...")
+            
+            return enhanced
+            
+        except Exception as e:
+            print(f"DEBUG: Error mejorando prompt: {e}")
+            return original_prompt
+
 
     def generate_image(self, prompt: str, filename: str) -> str:
         """

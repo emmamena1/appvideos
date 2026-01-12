@@ -975,9 +975,18 @@ elif st.session_state['step'] == 3:
                 else:
                     errors.append(f"Video Veo escena {scene_num}")
             else:
-                status_text.text(f"🖼️ Generando imagen Flux para escena {scene_num}...")
+                status_text.text(f"🖼️ Mejorando prompt y generando imagen para escena {scene_num}...")
+                
+                # 🆕 MEJORAR PROMPT VISUAL para coherencia con la narración
+                original_prompt = scene['visual_prompt']
+                narration = scene.get('narration', '')
+                enhanced_prompt = st.session_state.visual_agent.enhance_visual_prompt(original_prompt, narration)
+                
+                # Guardar el prompt mejorado para debug
+                scene['enhanced_prompt'] = enhanced_prompt
+                
                 img_file = f"scene_{scene_num}.png"
-                image_path = st.session_state.visual_agent.generate_image(scene['visual_prompt'], img_file)
+                image_path = st.session_state.visual_agent.generate_image(enhanced_prompt, img_file)
                 if image_path:
                     scene['image_path'] = image_path
                 else:
