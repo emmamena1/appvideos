@@ -531,6 +531,20 @@ if st.session_state['step'] == 1:
                         st.json(data)
             else:
                 st.warning("⚠️ Ingresa una URL primero.")
+        
+        st.caption("💡 **Tip:** Si el link falla, pega una descripción del producto abajo:")
+        product_desc_manual = st.text_area("Descripción manual (Opcional):", placeholder="Ej: Vendo un curso de hidroponía para departamentos pequeños...", height=100)
+        if st.button("🧠 Usar esta descripción", key="use_manual_desc_btn"):
+            if product_desc_manual:
+                st.session_state.url_data = {
+                    "nombre_producto": "Producto Personalizado",
+                    "dolor_principal": product_desc_manual,
+                    "beneficios": ["Extraído de descripción manual"],
+                    "ganchos_sugeridos": ["Hook personalizado"]
+                }
+                st.success("✅ Descripción guardada!")
+            else:
+                st.warning("⚠️ Escribe algo primero.")
     
     st.markdown("---")
     modo = st.radio(
