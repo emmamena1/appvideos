@@ -975,31 +975,10 @@ elif st.session_state['step'] == 3:
             st.balloons()
             st.success("🎉 ¡TODOS LOS ASSETS GENERADOS CORRECTAMENTE!")
             
-            # Resumen visual
-            st.markdown("---")
-            st.subheader("📁 Material Listo para Ensamblaje Final")
-            
-            for idx, s in enumerate(generated_assets):
-                c1, c2, c3 = st.columns([1, 2, 4])
-                
-                # Mostrar imagen o video
-                if 'image_path' in s and s['image_path']:
-                    if s['image_path'].lower().endswith('.mp4'):
-                        c1.video(s['image_path'])
-                    else:
-                        c1.image(s['image_path'], use_container_width=True)
-                
-                if 'audio_path' in s and s['audio_path']:
-                    c2.audio(s['audio_path'])
-                
-                c3.markdown(f"**Escena {idx + 1}:** *{s['narration'][:80]}...*")
-            
-            st.markdown("---")
-            st.info("🔜 **Próximo Paso:** Fase 4 - Ensamblaje con MoviePy")
-            
-            if st.button("👁️ Revisar Assets Generados", use_container_width=True, type="primary"):
-                st.session_state['step'] = 3.5
-                st.rerun()
+            # IR DIRECTAMENTE A REVISIÓN (step 3.5) para evitar loop
+            st.session_state['step'] = 3.5
+            st.info("🔜 Redirigiendo a la revisión de assets...")
+            st.rerun()
         else:
             st.error(f"❌ Hubo errores en: {', '.join(errors)}")
             st.session_state['script_data']['scenes'] = generated_assets
