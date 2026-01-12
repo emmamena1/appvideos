@@ -9,8 +9,8 @@
 | Campo | Valor |
 |-------|-------|
 | **Proyecto** | Video Factory AI (Quantum Clic) |
-| **Versión** | 3.0 |
-| **Estado** | ⚠️ VEO REQUIERE ACCESO (ver nota abajo) |
+| **Versión** | 3.1 |
+| **Estado** | ✅ OPERACIONAL (Flux) • ⚠️ VEO pendiente acceso |
 | **Última actualización** | 2026-01-11 |
 | **Último commit** | Pendiente |
 

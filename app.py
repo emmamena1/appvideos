@@ -138,6 +138,56 @@ Precio promocional: $17 USD
 PRODUCTO_TEMPLATE = PRODUCTOS_DISPONIBLES["🍊 Frutíferas en Macetas"]["template"]
 HOOK_TO_CHAPTER = PRODUCTOS_DISPONIBLES["🍊 Frutíferas en Macetas"]["hooks"]
 
+# --- GENERADOR DE IDEAS DE TEMAS ---
+def generate_ideas_tema(producto_tipo: str = "general") -> list:
+    """
+    Genera 5 ideas de temas/títulos virales usando Gemini.
+    
+    Args:
+        producto_tipo: Tipo de producto para contextualizar las ideas
+        
+    Returns:
+        Lista de 5 ideas de temas
+    """
+    from agents.scriptwriter import client
+    
+    if not client:
+        return ["❌ Gemini no disponible - verifica API key"]
+    
+    prompt = f"""Eres un experto en marketing viral y contenido TikTok.
+
+Genera EXACTAMENTE 5 ideas de temas/dolores de cliente para videos virales.
+Contexto del producto: {producto_tipo}
+
+REGLAS:
+- Cada idea debe ser un DOLOR o PROBLEMA específico del cliente
+- Deben ser temas que generen curiosidad y detengan el scroll
+- Usa lenguaje coloquial (español latino neutro)
+- Máximo 10-15 palabras por idea
+- NO uses emojis ni numeración
+
+FORMATO DE RESPUESTA (una idea por línea):
+Mis anuncios de Facebook queman dinero sin generar ventas
+Por qué mi planta se muere aunque la riego todos los días
+No puedo bajar de peso aunque hago ejercicio diario
+Mi negocio no genera clientes por redes sociales
+Mis videos no tienen visualizaciones aunque son buenos
+
+GENERA 5 IDEAS DIFERENTES Y ÚNICAS:"""
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
+        
+        # Parsear respuesta - una idea por línea
+        ideas = [line.strip() for line in response.text.strip().split('\n') if line.strip() and len(line.strip()) > 10]
+        return ideas[:5] if ideas else ["No se generaron ideas. Intenta de nuevo."]
+        
+    except Exception as e:
+        return [f"Error: {str(e)}"]
+
 # --- FUNCIONES DE AUTO-GENERACIÓN ---
 def parse_gemini_scenes(response_text: str) -> list:
     """
@@ -559,15 +609,36 @@ Close-up of hands planting seeds in containers...""",
         # Mostrar info del producto seleccionado
         st.caption(f"**{producto_config['nombre']}** | Precio: {producto_config['precio']} | {producto_config['bonos']} bonos incluidos")
         
+        # Inicializar session_state para ideas si no existe
+        if 'ideas_auto' not in st.session_state:
+            st.session_state.ideas_auto = []
+        if 'tema_auto_value' not in st.session_state:
+            st.session_state.tema_auto_value = "Gente en depa sin jardín"
+        
         col1, col2 = st.columns(2)
         
         with col1:
             tema_auto = st.text_input(
                 "📌 Tema del Video:",
-                value="Gente en depa sin jardín",
+                value=st.session_state.tema_auto_value,
                 placeholder="Ej: Personas con poco espacio en casa",
-                help="Describe la audiencia o situación objetivo"
+                help="Describe la audiencia o situación objetivo",
+                key="tema_auto_input"
             )
+            
+            # Botón para generar ideas
+            if st.button("💡 Generar Ideas", key="ideas_btn_auto", help="Genera 5 ideas de temas virales con Gemini"):
+                with st.spinner("🧠 Generando ideas..."):
+                    ideas = generate_ideas_tema(producto_key)
+                    st.session_state.ideas_auto = ideas
+            
+            # Mostrar ideas como botones seleccionables
+            if st.session_state.ideas_auto:
+                st.caption("**Ideas sugeridas (haz clic para usar):**")
+                for i, idea in enumerate(st.session_state.ideas_auto):
+                    if st.button(f"📝 {idea}", key=f"idea_auto_{i}", use_container_width=True):
+                        st.session_state.tema_auto_value = idea
+                        st.rerun()
         
         with col2:
             producto_auto = st.text_input(
@@ -667,18 +738,45 @@ Close-up of hands planting seeds in containers...""",
         
         st.markdown("---")
         
-        # Inputs con valores pre-cargados de plantilla
+        # Inicializar session_state para ideas en modo manual
+        if 'ideas_manual' not in st.session_state:
+            st.session_state.ideas_manual = []
+        if 'topic_manual_value' not in st.session_state:
+            st.session_state.topic_manual_value = ""
+        
+        # Inputs con valores pre-cargados de plantilla o de ideas seleccionadas
         col1, col2 = st.columns(2)
-        topic = col1.text_input(
-            "💡 Tema / Dolor del Cliente",
-            value=templates[template_choice]["topic"],
-            placeholder="Ej: Mis anuncios de Facebook no convierten..."
-        )
-        product = col2.text_input(
-            "🎯 Producto/Servicio a Vender",
-            value=templates[template_choice]["product"],
-            placeholder="Ej: Consultoría de Meta Ads"
-        )
+        
+        with col1:
+            # Usar el valor de la plantilla si está seleccionada, o el valor guardado
+            initial_topic = templates[template_choice]["topic"] if template_choice else st.session_state.topic_manual_value
+            topic = st.text_input(
+                "💡 Tema / Dolor del Cliente",
+                value=initial_topic,
+                placeholder="Ej: Mis anuncios de Facebook no convierten...",
+                key="topic_manual_input"
+            )
+            
+            # Botón para generar ideas
+            if st.button("💡 Generar Ideas", key="ideas_btn_manual", help="Genera 5 ideas de temas virales con Gemini"):
+                with st.spinner("🧠 Generando ideas..."):
+                    ideas = generate_ideas_tema("general")
+                    st.session_state.ideas_manual = ideas
+            
+            # Mostrar ideas como botones seleccionables
+            if st.session_state.ideas_manual:
+                st.caption("**Ideas sugeridas (haz clic para usar):**")
+                for i, idea in enumerate(st.session_state.ideas_manual):
+                    if st.button(f"📝 {idea}", key=f"idea_manual_{i}", use_container_width=True):
+                        st.session_state.topic_manual_value = idea
+                        st.rerun()
+        
+        with col2:
+            product = st.text_input(
+                "🎯 Producto/Servicio a Vender",
+                value=templates[template_choice]["product"],
+                placeholder="Ej: Consultoría de Meta Ads"
+            )
 
         # Selector de número de escenas
         num_scenes = st.slider(
