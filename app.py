@@ -349,13 +349,13 @@ ESCENA 4: [oferta humana personal con bonos] | [prompt imagen INGLÉS call-to-ac
 
 EJEMPLOS DE PROMPTS VISUALES CORRECTOS (para tema de plantas):
 ✅ "Close-up of hands planting a small lemon tree in a terracotta pot on a sunny balcony, cinematic 8K photography, depth of field, natural lighting, NO TEXT"
-✅ "Wide shot of a happy person smiling next to thriving potted fruit trees on apartment balcony, golden hour lighting, ultra-realistic, NO TEXT"
-✅ "Macro photography of fresh oranges growing on a small potted tree, water droplets, professional lighting, 8K detail, NO TEXT"
+✅ "A woman smiling widely, holding a BLANK white book with NO TEXT on the cover, standing next to lush tomato plants, sunny garden setting, 8k detailed, ultra-realistic"
+✅ "Close-up of a PLAIN white folder with NO LABELS or writing, placed on a wooden gardening table next to seeds and soil, cinematic lighting, ultra-realistic"
 
 EJEMPLOS INCORRECTOS (NUNCA HAGAS ESTO):
 ❌ "Hand holding smartphone showing gardening app..."
-❌ "Digital mockup of ebook cover..."
-❌ "Phone screen displaying product offer..."
+❌ "Digital mockup of ebook cover with title 'Tomato Guide'..."
+❌ "Phone screen displaying product offer with text..."
 """
 
     try:

@@ -41,26 +41,27 @@ class VisualGeneratorAgent:
             
             client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
             
-            enhancement_prompt = f"""Eres un experto en prompts para generación de imágenes AI.
+            enhancement_prompt = f"""Eres un experto en prompts para generación de imágenes AI (Flux).
 
 NARRACIÓN DEL VIDEO: "{narration}"
 
 PROMPT VISUAL ORIGINAL: "{original_prompt}"
 
-Tu tarea es mejorar el prompt visual para que:
-1. Sea 100% coherente con la narración
-2. Describa una escena REAL y FÍSICA (no dispositivos electrónicos)
-3. NO incluya texto, letras, palabras, UI, pantallas, teléfonos
-4. Sea específico y detallado para evitar ambigüedades
+Tu tarea es crear un prompt visual en INGLÉS que sea 100% coherente con la narración y que NO GENERE TEXTO.
 
-REGLAS ESTRICTAS:
-- Si la narración habla de PLANTAS/HUERTO: la imagen DEBE mostrar plantas reales, macetas con tierra, hojas verdes, frutas
-- Si habla de PROBLEMAS: mostrar expresión preocupada de persona junto a plantas marchitas
-- Si habla de SOLUCIÓN: mostrar plantas saludables, persona sonriendo con su huerto
-- NUNCA uses la palabra "pots" sola (confunde con ollas), usa "plant pots" o "flower pots" o "terracotta planters"
-- Agregar siempre: "ultra-realistic photography, 8K, cinematic lighting, NO TEXT, no words, no letters"
+REGLAS DE ORO PARA EVITAR TEXTO:
+1. Si mencionas un libro, manual, guía o papel: descríbelo como "BLANK white cover", "unlabeled book", "plain white folder", "generic white booklet with no text".
+2. PROHIBIDO mencionar: "title", "cover design", "text", "words", "letters", "typography", "logo", "branding".
+3. Describe el objeto por su FORMA y COLOR físico, nunca por su contenido escrito.
+4. NUNCA uses la palabra "pots" sola (confunde con ollas), usa "plant pots" o "terracotta planters".
 
-Responde SOLO con el prompt mejorado en inglés, nada más:"""
+REGLAS DE ESCENA:
+- Describa una escena REAL y FÍSICA (balcones, jardines, manos reales).
+- NO dispositivos electrónicos (teléfonos, pantallas).
+- Estilo: Cinematic 8K photography, highly detailed, realistic textures.
+
+Responde SOLO con el prompt final en inglés, agregando al final: ", ultra-realistic, 8k, cinematic lighting, NO TEXT, no words, no letters, no labels, blank surfaces"
+"""
 
             response = client.models.generate_content(
                 model="gemini-2.0-flash",
@@ -68,30 +69,21 @@ Responde SOLO con el prompt mejorado en inglés, nada más:"""
             )
             
             enhanced = response.text.strip()
-            # Limpiar comillas si las tiene
             enhanced = enhanced.strip('"').strip("'")
-            
-            print(f"DEBUG: Prompt original: {original_prompt[:50]}...")
-            print(f"DEBUG: Prompt mejorado: {enhanced[:50]}...")
             
             return enhanced
             
         except Exception as e:
-            print(f"DEBUG: Error mejorando prompt: {e}")
             return original_prompt
 
 
     def generate_image(self, prompt: str, filename: str) -> str:
         """
         Genera imagen usando Flux-Schnell.
-        Aplica mejoras de calidad cinematográfica sin forzar un estilo específico.
         
         Args:
-            prompt: Prompt visual en inglés (viene desde ScriptWriter)
-            filename: Nombre del archivo (ej: "scene_1.png")
-        
-        Returns:
-            str: Ruta absoluta del archivo PNG generado, o None si falla
+            prompt: Prompt visual en inglés (mejorado)
+            filename: Nombre del archivo
         """
         if not self.is_ready():
             st.error("❌ Together Client no inicializado.")
@@ -101,50 +93,35 @@ Responde SOLO con el prompt mejorado en inglés, nada más:"""
             output_dir = os.path.join("assets", "images")
             os.makedirs(output_dir, exist_ok=True)
 
-            # Forzar extensión .png
             if not filename.lower().endswith(".png"):
                 filename = filename.rsplit(".", 1)[0] + ".png"
             
             output_path = os.path.join(output_dir, filename)
 
-            # Cache DESHABILITADO - Siempre generar nueva imagen
-            # if os.path.exists(output_path):
-            #     return output_path
+            # ✨ REFUERZO DE SEGURIDAD CONTRA TEXTO (Pesado al inicio)
+            # Ponemos las restricciones al inicio porque los modelos dan más peso a las primeras palabras
+            final_prompt = f"CLEAN IMAGE WITHOUT ANY TEXT OR WORDS, NO LETTERS, NO TYPOGRAPHY, NO LABELS, {prompt}"
 
-            # ✨ MEJORA DE CALIDAD GENÉRICA (No fuerza estilo industrial)
-            # El prompt del scriptwriter ya define el contexto visual
-            # IMPORTANTE: Prohibir texto para que las imágenes sean limpias
-            final_prompt = f"{prompt}, ultra-realistic, 8k, highly detailed, cinematic lighting, professional photography, NO TEXT, no words, no letters, no typography, no watermarks, clean image without any text overlays"
-
-            # Generación con Flux Schnell (9:16 Vertical para Shorts)
             response = self.client.images.generate(
                 prompt=final_prompt,
                 model="black-forest-labs/FLUX.1-schnell",
-                width=1024,   # Ancho
-                height=1792,  # Alto (9:16 Vertical exacto)
-                steps=4,      # Flux-Schnell optimizado para 1-4 steps
+                width=1024,
+                height=1792,
+                steps=4,
                 n=1,
                 response_format="b64_json"
             )
 
-            # Decodificación y guardado
             if response.data and len(response.data) > 0:
                 image_data = base64.b64decode(response.data[0].b64_json)
                 with open(output_path, "wb") as f:
                     f.write(image_data)
                 
-                # Verificar que se creó correctamente
                 if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
                     return output_path
-                else:
-                    st.error("❌ La imagen no se generó correctamente")
-                    return None
-            else:
-                st.error("❌ Together AI no retornó datos")
-                return None
+                
+            return None
 
         except Exception as e:
-            st.error(f"❌ Error generando imagen con Together AI: {e}")
-            import traceback
-            st.code(traceback.format_exc())
+            st.error(f"❌ Error generando imagen: {e}")
             return None
